@@ -1,0 +1,1 @@
+import "webext-bridge/background";

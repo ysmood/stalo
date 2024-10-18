@@ -1,0 +1,32 @@
+{
+  "name": "@stalo/devtools-ui",
+  "version": "0.0.1",
+  "description": "UI for stalo devtools",
+  "type": "module",
+  "scripts": {
+    "start": "vite --open",
+    "build": "tsc -b"
+  },
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "files": [
+    "./lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ysmood/stalo/tree/main/packages/devtools-ui"
+  },
+  "dependencies": {
+    "@codemirror/lang-json": "^6.0.1",
+    "@emotion/css": "^11.13.4",
+    "@uiw/codemirror-theme-okaidia": "^4.23.5",
+    "@uiw/react-codemirror": "^4.23.5",
+    "deep-equal": "^2.2.3",
+    "stalo": "file:.."
+  },
+  "devDependencies": {
+    "@types/deep-equal": "^1.0.4"
+  }
+}

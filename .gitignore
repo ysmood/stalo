@@ -16,3 +16,4 @@ dist-ssr
 test-results/
 .vite-playwright
 __screenshots__/
+.rollup.cache/

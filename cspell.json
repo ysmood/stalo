@@ -1,10 +1,14 @@
 {
   "words": [
+    "codemirror",
     "immer",
+    "okaidia",
     "stalo",
     "todomvc",
     "todos",
+    "treeshake",
     "tsbuildinfo",
+    "webext",
     "wouter",
     "zustand"
   ]

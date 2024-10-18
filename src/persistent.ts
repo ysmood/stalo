@@ -30,7 +30,7 @@ export function urlStorage<S>(storage: URLStorage<S>): Middleware<S> {
     return (ns, opts?: URLStorageOptions) => {
       const produce = producer(ns);
       set((state) => {
-        const s = produce(state) as S;
+        const s = produce(state);
         storage.set(s, opts?.[saveHistory]);
         return s;
       }, opts);

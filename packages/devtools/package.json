@@ -1,9 +1,0 @@
-{
-  "name": "@stalo/devtools",
-  "version": "0.0.1",
-  "description": "Chrome extension for stalo debugging",
-  "scripts": {},
-  "repository": {
-    "url": "https://github.com/stalo/tree/main/packages/devtools"
-  }
-}

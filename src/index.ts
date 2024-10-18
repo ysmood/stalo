@@ -61,7 +61,7 @@ export default function create<S>(init: S) {
 
   const setStore: SetStore<S> = (ns: NextState<S>) => {
     // update val with the new value
-    state = producer(ns)(state) as S;
+    state = producer(ns)(state);
 
     // notify all listeners
     for (const listener of listeners) {
@@ -76,6 +76,6 @@ export default function create<S>(init: S) {
  * Converts a NextState to a Produce function.
  * @returns
  */
-export function producer<S>(ns: NextState<S>): Produce<S> {
-  return ns instanceof Function ? ns : () => ns;
+export function producer<S>(ns: NextState<S>): (s: S) => S {
+  return ns instanceof Function ? (ns as (s: S) => S) : () => ns;
 }
