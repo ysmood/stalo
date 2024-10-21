@@ -22,17 +22,25 @@ export const noName = "@@no-name";
 
 export const initName = "@@init";
 
-export default function devtools<S>(init: S): Middleware<S> {
+export default function devtools<S>(init: S, devName = ""): Middleware<S> {
   return (set) => {
     const subscribers = new Set<Subscriber<S>>();
 
-    Object.assign(window, {
-      [devtoolsKey]: new Devtools(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const win = window as any;
+
+    if (!win[devtoolsKey]) {
+      win[devtoolsKey] = [];
+    }
+
+    win[devtoolsKey].push(
+      new Devtools(
+        devName,
         { name: initName, state: init, createdAt: Date.now() },
         set,
         subscribers
-      ),
-    });
+      )
+    );
 
     window.dispatchEvent(new CustomEvent(devtoolsKey));
 
@@ -56,7 +64,7 @@ export default function devtools<S>(init: S): Middleware<S> {
   };
 }
 
-export function getDevtools<S>(): Devtools<S> | undefined {
+export function getDevtools<S>(): Devtools<S>[] | undefined {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (window as any)[devtoolsKey];
 }
@@ -65,6 +73,7 @@ type Subscriber<S> = (record: Record<S>) => void;
 
 export class Devtools<S> {
   constructor(
+    readonly name: string,
     readonly initRecord: Record<S>,
     private set: SetStore<S>,
     private subscribers: Set<Subscriber<S>>

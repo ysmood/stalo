@@ -1,5 +1,5 @@
 import { type Plugin } from "vite";
-import { writeFileSync } from "fs";
+import { writeFileSync, readFileSync } from "fs";
 import { execSync } from "child_process";
 
 const appFilename = "index.html";
@@ -15,9 +15,12 @@ function genManifest() {
   const manifest = {
     manifest_version: 3,
     name: "Stalo Chrome Extension",
-    version: "0.0.1",
+    version: "0.0.2",
     description: "Chrome extension for stalo debugging",
     devtools_page: `${htmlFilename}`,
+    icons: {
+      128: "icon.png",
+    },
     background: {
       service_worker: background + ".js",
     },
@@ -28,7 +31,6 @@ function genManifest() {
         run_at: "document_start",
       },
     ],
-    permissions: ["storage"],
     host_permissions: ["file:///*", "http://*/*", "https://*/*"],
     web_accessible_resources: [
       {
@@ -57,6 +59,9 @@ function genManifest() {
       ENTRIES: [communicator, background, contentScript].join(","),
     },
   });
+
+  writeFileSync("dist/icon.png", readFileSync("src/icon.png"));
+  console.info("Generated chrome extension icons");
 
   writeFileSync(
     `${dist}/${manifestFilename}`,

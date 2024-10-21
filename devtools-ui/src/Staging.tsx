@@ -1,4 +1,10 @@
-import { setStaging, commit, useStaging, revert } from "./store";
+import {
+  setStaging,
+  commit,
+  useStaging,
+  revert,
+  useSelectedSession,
+} from "./store";
 import { css } from "@emotion/css";
 import CodeMirror from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
@@ -7,13 +13,14 @@ import { Button, Title } from "./Components";
 
 export default function Staging() {
   const staging = useStaging();
+  const sessionID = useSelectedSession();
 
   return (
     <div className={style}>
       <div className="toolbar">
         <Title text="Staging" />
         <Button onClick={() => revert()} text="Revert" />
-        <Button onClick={() => commit(staging)} text="Commit" />
+        <Button onClick={() => commit(sessionID, staging)} text="Commit" />
       </div>
 
       <div className="editor">

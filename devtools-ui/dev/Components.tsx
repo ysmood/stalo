@@ -1,14 +1,14 @@
-import create from "stalo";
+import create, { SetStore, UseStore } from "stalo";
 import Panel from "../src/Panel";
 import { compose } from "stalo/lib/utils";
 import devtools, { description, name } from "stalo/lib/devtools";
 import immer from "stalo/lib/immer";
 
-const initStat = 0;
+const useCountList: UseStore<number>[] = [];
+const setCountList: SetStore<number>[] = [];
 
-const [useCount, baseSetCount] = create(initStat);
-
-const setCount = compose(baseSetCount, immer, devtools(initStat));
+createStore("left");
+createStore("right");
 
 export function App() {
   return (
@@ -18,7 +18,8 @@ export function App() {
       }}
     >
       <div style={{ width: 200, margin: 30 }}>
-        <Counter />
+        <Counter id={0} text="Increase Left" />
+        <Counter id={1} text="Increase Right" />
       </div>
       <div
         style={{
@@ -34,17 +35,28 @@ export function App() {
   );
 }
 
-export function Counter() {
+export function Counter({ id, text }: { id: number; text: string }) {
   return (
     <button
       onClick={() =>
-        setCount((c) => c + 1, {
+        setCountList[id]((c) => c + 1, {
           [name]: "Increment",
           [description]: "Increase the count by 1",
         })
       }
     >
-      Increase {useCount()}
+      {text} {useCountList[id]()}
     </button>
   );
+}
+
+function createStore(name: string) {
+  const initStat = 0;
+
+  const [useCount, baseSetCount] = create(initStat);
+
+  const setCount = compose(baseSetCount, immer, devtools(initStat, name));
+
+  useCountList.push(useCount);
+  setCountList.push(setCount);
 }

@@ -16,7 +16,9 @@ it("devtools", async () => {
 
   const setStore = compose(set, addOne, devtools(init));
 
-  const d = getDevtools<number>()!;
+  compose(set, addOne, devtools(init));
+
+  const d = getDevtools<number>()![0];
 
   expect(d.initRecord.state).toBe(1);
 

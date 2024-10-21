@@ -2,21 +2,25 @@ import { getDevtools } from "stalo/lib/devtools";
 import { plug, Connection } from "./store";
 
 export default function connect() {
-  const dt = getDevtools();
+  const list = getDevtools();
 
-  if (!dt) return;
+  if (!list) return;
 
-  const conn: Connection = {
-    setState(json) {
-      dt.state = JSON.parse(json);
-    },
-  };
+  list.forEach((dt, i) => {
+    const conn: Connection = {
+      id: i,
+      name: dt.name,
+      setState(json) {
+        dt.state = JSON.parse(json);
+      },
+    };
 
-  plug(conn);
+    plug(conn);
 
-  conn.onInit?.(dt.initRecord);
+    conn.onInit?.(dt.initRecord);
 
-  dt.subscribe((rec) => {
-    conn.onRecord?.(rec);
+    dt.subscribe((rec) => {
+      conn.onRecord?.(rec);
+    });
   });
 }

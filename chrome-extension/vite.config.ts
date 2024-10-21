@@ -6,7 +6,4 @@ import manifest from "./manifest";
 export default defineConfig({
   plugins: [react(), manifest],
   optimizeDeps: { exclude: ["fsevents"] },
-  build: {
-    sourcemap: true,
-  },
 });

@@ -1,9 +1,11 @@
 import { css, cx } from "@emotion/css";
 import {
   selectRecord,
+  selectSession,
   useHistoryIDs,
   useRecord,
   useSelected,
+  useSessionIDs,
   useTimeDiff,
 } from "./store";
 import { Name, Title } from "./Components";
@@ -11,12 +13,32 @@ import { Name, Title } from "./Components";
 export default function History() {
   return (
     <div className={style}>
-      <Title className="title border-bottom" text="History" />
+      <div className="header border-bottom">
+        <Title className="title" text="History" />
+        <Sessions />
+      </div>
       <div>
         {useHistoryIDs().map((id) => {
           return <Item key={id} id={id} />;
         })}
       </div>
+    </div>
+  );
+}
+
+function Sessions() {
+  return (
+    <div className="sessions">
+      <select
+        onChange={(e) => selectSession(parseInt(e.target.value))}
+        title="Select a devtools session"
+      >
+        {useSessionIDs().map(({ id, name }) => (
+          <option key={id} value={id}>
+            {id} {name}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
@@ -75,6 +97,19 @@ const style = css({
 
   ".border-bottom": {
     borderBottom: "1px solid #3c3c3c",
+  },
+
+  ".header": {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+
+    select: {
+      background: "#4e4e4ec2",
+      color: "white",
+      padding: "0 5px",
+      borderRadius: 3,
+    },
   },
 
   ".title": {

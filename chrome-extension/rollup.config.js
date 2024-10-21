@@ -2,6 +2,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
+import terser from '@rollup/plugin-terser';
 
 // eslint-disable-next-line no-undef
 const entries = process.env.ENTRIES.split(',');
@@ -12,7 +13,6 @@ export default entries.map(entry => {
 		output: {
 			file: `dist/${entry}.js`, // Output file
 			format: 'iife', // Immediately Invoked Function Expression format
-			sourcemap: true
 		},
 		treeshake: true,
 		plugins: [
@@ -21,7 +21,8 @@ export default entries.map(entry => {
 			commonjs({ extensions: ['.js', '.ts'] }), // Convert CommonJS modules to ES6
 			injectProcessEnv({
 				NODE_ENV: 'production',
-			})
+			}),
+			terser(),
 		],
 	};
 })

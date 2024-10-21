@@ -2,7 +2,7 @@ import ReactDOM from "react-dom/client";
 import { onMessage, sendMessage } from "webext-bridge/devtools";
 import { eventInit, eventRecord, eventUpdate } from "./types";
 import { Record } from "stalo/lib/devtools";
-import { plug, Connection, Panel } from "@stalo/devtools-ui";
+import { unplug, plug, Connection, Panel } from "@stalo/devtools-ui";
 
 connect();
 
@@ -13,19 +13,40 @@ document.body.appendChild(root);
 ReactDOM.createRoot(root).render(<Panel />);
 
 function connect() {
-  const conn: Connection = {
-    setState(json) {
-      sendMessage(eventUpdate, json, "content-script");
-    },
-  };
+  const list: Connection[] = [];
 
-  plug(conn);
+  chrome.runtime.onConnect.addListener((port) => {
+    port.onDisconnect.addListener(() => {
+      list.forEach((_, id) => {
+        unplug(id);
+      });
+    });
+  });
 
   onMessage(eventInit, async ({ data }) => {
-    conn.onInit?.(data as unknown as Record<unknown>);
+    const [id, name, rec] = data as unknown as [
+      number,
+      string,
+      Record<unknown>
+    ];
+
+    const conn: Connection = {
+      id,
+      name,
+      setState(json) {
+        sendMessage(eventUpdate, [id, json], "content-script");
+      },
+    };
+
+    list[id] = conn;
+
+    plug(conn);
+
+    conn.onInit?.(rec);
   });
 
   onMessage(eventRecord, async ({ data }) => {
-    conn.onRecord?.(data as unknown as Record<unknown>);
+    const [id, rec] = data as unknown as [number, Record<unknown>];
+    list[id].onRecord?.(rec);
   });
 }

@@ -5,6 +5,11 @@ import { useRecord, useSelected } from "./store";
 export function CurrentRecord() {
   const id = useSelected();
   const record = useRecord(id);
+
+  if (!record) {
+    return null;
+  }
+
   return (
     <div className={style}>
       <div className="info">
