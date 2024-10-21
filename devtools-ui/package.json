@@ -1,6 +1,6 @@
 {
   "name": "@stalo/devtools-ui",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "UI for stalo devtools",
   "type": "module",
   "scripts": {
@@ -25,7 +25,7 @@
     "@uiw/codemirror-theme-okaidia": "^4.23.5",
     "@uiw/react-codemirror": "^4.23.5",
     "deep-equal": "^2.2.3",
-    "stalo": "file:../"
+    "stalo": "^0.6.3"
   },
   "devDependencies": {
     "@types/deep-equal": "^1.0.4"
