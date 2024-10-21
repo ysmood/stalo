@@ -22,10 +22,10 @@ function connect() {
   plug(conn);
 
   onMessage(eventInit, async ({ data }) => {
-    conn.onInit?.(data as Record<unknown>);
+    conn.onInit?.(data as unknown as Record<unknown>);
   });
 
   onMessage(eventRecord, async ({ data }) => {
-    conn.onRecord?.(data as Record<unknown>);
+    conn.onRecord?.(data as unknown as Record<unknown>);
   });
 }

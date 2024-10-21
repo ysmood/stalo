@@ -1,7 +1,7 @@
 import { css } from "@emotion/css";
 import Staging from "./Staging";
 import History from "./History";
-import { CurrentRecord } from "./RecordDetails";
+import { CurrentRecord } from "./CurrentRecord";
 
 export default function Panel() {
   return (

@@ -12,6 +12,7 @@ All the non-core functions are just examples of how you can compose functions to
 - **Scalable**: Naturally scale large state into multiple modules and files without performance degradation.
 - **Middlewares**: Simple and type-safe middleware composition interface.
 - **Tiny**: About [0.3KB](https://bundlephobia.com/package/stalo) Minified + Gzipped.
+- **Devtools**: Native devtools support.
 
 ## Documentation
 

@@ -78,7 +78,7 @@ export function selectRecord(i: number) {
   });
 }
 
-export const commitName = Symbol("commit");
+export const commitName = "@@commit";
 
 export function commit(staging: string) {
   setStore((s) => {

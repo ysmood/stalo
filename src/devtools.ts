@@ -7,20 +7,20 @@ export const description = Symbol("description");
 export const devtoolsKey = "__stalo_devtools__";
 
 export type DevtoolsOptions = {
-  [name]?: symbol;
+  [name]?: string;
   [description]?: string;
 };
 
 export type Record<S> = {
-  name: symbol;
+  name: string;
   state: S;
   description?: string;
   createdAt: number;
 };
 
-export const noName = Symbol("no-name");
+export const noName = "@@no-name";
 
-export const initName = Symbol("init");
+export const initName = "@@init";
 
 export default function devtools<S>(init: S): Middleware<S> {
   return (set) => {

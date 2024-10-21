@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "vite --open",
-    "build": "tsc -b"
+    "build": "tsc -b --clean && tsc -b",
+    "prepublishOnly": "npm run build"
   },
   "main": "./lib/index.js",
   "exports": {
@@ -24,7 +25,7 @@
     "@uiw/codemirror-theme-okaidia": "^4.23.5",
     "@uiw/react-codemirror": "^4.23.5",
     "deep-equal": "^2.2.3",
-    "stalo": "file:.."
+    "stalo": "^0.6.1"
   },
   "devDependencies": {
     "@types/deep-equal": "^1.0.4"

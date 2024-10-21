@@ -72,7 +72,7 @@ export function Name({
   name,
   className,
 }: {
-  name: symbol;
+  name: string;
   className?: string;
 }) {
   return (
