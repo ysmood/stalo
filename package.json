@@ -9,8 +9,16 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
-    "build-extension": "npm run -w devtools-ui build && npm run -w chrome-extension build"
+    "build-extension": "npm run -w devtools-ui build && npm run -w chrome-extension build",
+    "version": "node sync-version.js"
   },
+  "publishConfig": {
+    "provenance": true
+  },
+  "workspaces": [
+    "devtools-ui",
+    "chrome-extension"
+  ],
   "main": "./lib/index.js",
   "exports": {
     ".": "./lib/index.js",
@@ -59,12 +67,5 @@
     "vite": "^5.4.8",
     "vitest": "^2.1.2",
     "wouter": "^3.3.5"
-  },
-  "publishConfig": {
-    "provenance": true
-  },
-  "workspaces": [
-    "devtools-ui",
-    "chrome-extension"
-  ]
+  }
 }

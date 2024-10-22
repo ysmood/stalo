@@ -8,6 +8,9 @@
     "build": "tsc -b --clean && tsc -b",
     "prepublishOnly": "npm run build"
   },
+  "publishConfig": {
+    "provenance": true
+  },
   "main": "./lib/index.js",
   "exports": {
     ".": "./lib/index.js"
@@ -25,7 +28,7 @@
     "@uiw/codemirror-theme-okaidia": "^4.23.5",
     "@uiw/react-codemirror": "^4.23.5",
     "deep-equal": "^2.2.3",
-    "stalo": "^0.6.3"
+    "stalo": "0.6.4"
   },
   "devDependencies": {
     "@types/deep-equal": "^1.0.4"
