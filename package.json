@@ -1,6 +1,6 @@
 {
   "name": "stalo",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "type": "module",
   "scripts": {
     "start": "npm run build && vite --open",
