@@ -1,4 +1,4 @@
-import { toggleAll, useToggleAll } from "./store/actions";
+import { toggleAll, useToggleAll } from "./store/toolbar";
 import { useZeroCount } from "./store/todos";
 
 // The component to toggle all todos.

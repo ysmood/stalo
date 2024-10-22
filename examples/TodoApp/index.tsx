@@ -1,4 +1,4 @@
-import Actions from "./Actions";
+import Toolbar from "./Toolbar";
 import Title from "./Title";
 import TodoList from "./TodoList";
 
@@ -6,7 +6,7 @@ export default function TodoApp() {
   return (
     <>
       <Title />
-      <Actions />
+      <Toolbar />
       <TodoList />
     </>
   );

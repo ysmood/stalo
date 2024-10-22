@@ -1,9 +1,9 @@
 import Filter from "./Filter";
-import { addTodo, clearCompleted } from "./store/actions";
+import { addTodo, clearCompleted } from "./store/toolbar";
 import { useZeroDone } from "./store/todos";
 import ToggleAll from "./ToggleAll";
 
-export default function Actions() {
+export default function Toolbar() {
   return (
     <div className="flex gap-1">
       <ToggleAll />
