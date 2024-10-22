@@ -1,19 +1,23 @@
 import { css, cx } from "@emotion/css";
-import { initName, noName } from "stalo/lib/devtools";
-import { commitName } from "./store";
+import { noName } from "stalo/lib/devtools";
+import { commitName, initName } from "./store/constants";
 
 export function Button({
-  text,
+  icon,
+  text = "",
   onClick,
   className,
+  title,
 }: {
-  text: string;
+  icon?: React.ReactElement;
+  text?: string;
   onClick?: () => void;
   className?: string;
+  title: string;
 }) {
   return (
-    <div onClick={onClick} className={cx(buttonStyle, className)}>
-      {text}
+    <div onClick={onClick} className={cx(buttonStyle, className)} title={title}>
+      {icon} {text}
     </div>
   );
 }
@@ -25,6 +29,9 @@ const buttonStyle = css({
   cursor: "pointer",
   transition: "background-color 0.3s, transform 0.1s",
   userSelect: "none",
+  display: "flex",
+  gap: 5,
+  alignItems: "center",
 
   "&:hover": {
     backgroundColor: "#555",

@@ -1,11 +1,26 @@
+import "./global-css";
 import { css } from "@emotion/css";
 import Staging from "./Staging";
 import History from "./History";
 import { CurrentRecord } from "./CurrentRecord";
+import connect from "./connect";
+import { useEffect } from "react";
 
-export default function Panel() {
+export default function Panel({
+  chromeExtension,
+  width,
+  height,
+}: {
+  chromeExtension?: boolean;
+  width?: number;
+  height?: number;
+}) {
+  useEffect(() => {
+    if (!chromeExtension) return connect();
+  }, [chromeExtension]);
+
   return (
-    <div className={style}>
+    <div className={style} style={{ width, height }}>
       <History />
       <CurrentRecord />
       <Staging />
@@ -27,7 +42,7 @@ const style = css({
   gap: 10,
   height: "100%",
   color: "#fff",
-  fontFamily: "Arial, sans-serif",
+  fontFamily: "Roboto, sans-serif",
   fontSize: 12,
   backgroundColor: "#282828",
 

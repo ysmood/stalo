@@ -52,12 +52,14 @@ function genManifest() {
   );
   console.info("Generated chrome extension html entrypoint");
 
-  execSync(`npx rollup -c rollup.config.js`, {
-    stdio: "inherit",
-    env: {
-      ...process.env,
-      ENTRIES: [communicator, background, contentScript].join(","),
-    },
+  [communicator, background, contentScript].forEach((entry) => {
+    execSync(`npx vite -c vite.ext.config.ts build`, {
+      stdio: "inherit",
+      env: {
+        ...process.env,
+        ENTRY: entry,
+      },
+    });
   });
 
   writeFileSync("dist/icon.png", readFileSync("src/icon.png"));

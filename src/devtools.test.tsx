@@ -18,9 +18,9 @@ it("devtools", async () => {
 
   compose(set, addOne, devtools(init));
 
-  const d = getDevtools<number>()![0];
+  const d = getDevtools<number>()[0];
 
-  expect(d.initRecord.state).toBe(1);
+  expect(d.state).toBe(1);
 
   let count = 0;
   const close = d.subscribe((record) => {

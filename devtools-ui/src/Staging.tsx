@@ -1,59 +1,66 @@
-import {
-  setStaging,
-  commit,
-  useStaging,
-  revert,
-  useSelectedSession,
-} from "./store";
+import { commit, format, revert, useGetState } from "./store";
 import { css } from "@emotion/css";
-import CodeMirror from "@uiw/react-codemirror";
-import { json } from "@codemirror/lang-json";
-import { okaidia } from "@uiw/codemirror-theme-okaidia";
 import { Button, Title } from "./Components";
+import { MonacoEditor } from "./MonacoEditor";
+import { LuCheck, LuUndoDot } from "react-icons/lu";
+import { VscSymbolNamespace } from "react-icons/vsc";
 
 export default function Staging() {
-  const staging = useStaging();
-  const sessionID = useSelectedSession();
-
   return (
     <div className={style}>
-      <div className="toolbar">
-        <Title text="Staging" />
-        <Button onClick={() => revert()} text="Revert" />
-        <Button onClick={() => commit(sessionID, staging)} text="Commit" />
-      </div>
+      <Toolbar />
+      <MonacoEditor className="editor" />
+    </div>
+  );
+}
 
-      <div className="editor">
-        <CodeMirror
-          value={staging}
-          height="100%"
-          extensions={[json()]}
-          theme={okaidia}
-          onChange={(val) => {
-            setStaging(val);
-          }}
-        />
-      </div>
+function Toolbar() {
+  const getState = useGetState();
+
+  return (
+    <div className="toolbar">
+      <Title text="Staging" />
+      <Button
+        onClick={() => revert(getState)}
+        icon={<LuUndoDot size={16} />}
+        title="Use current page state as staging content"
+      />
+      <Button
+        onClick={() => commit()}
+        icon={<LuCheck size={16} color="#20cf20" />}
+        text="Commit"
+        title="Set page state as staging content"
+      />
+      <Button
+        onClick={() => format()}
+        icon={<VscSymbolNamespace size={14} />}
+        className="format"
+        title="Format json"
+      />
     </div>
   );
 }
 
 const style = css({
   label: "Editor",
-
-  display: "flex",
-  gap: 10,
-  flexDirection: "column",
   gridArea: "staging",
+
+  display: "grid",
+  gap: 10,
+  gridTemplateRows: "auto 1fr",
 
   ".toolbar": {
     display: "flex",
     alignItems: "center",
     gap: 10,
-    height: 40,
+
+    ".format": {
+      fontFamily: "monospace",
+    },
   },
 
   ".editor": {
-    flex: 1,
+    height: "100%",
+    boxShadow: "0 0 5px #1e1e1e",
   },
 });

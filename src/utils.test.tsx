@@ -2,7 +2,14 @@ import { it, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render, screen } from "@testing-library/react";
 import create, { producer, SetStore } from ".";
-import { compose, Middleware, useEqual } from "./utils";
+import {
+  compose,
+  deepEqual,
+  immutable,
+  Middleware,
+  uid,
+  useEqual,
+} from "./utils";
 
 it("selector with equal", async () => {
   const [useVal, setVal] = create({ val: "test" });
@@ -48,4 +55,23 @@ it("compose", async () => {
   compose(set, addOne, double)(2);
 
   expect(state).toBe(6);
+});
+
+it("deepEqual", async () => {
+  expect(deepEqual({ a: 1, b: [1, 2] }, { a: 1, b: [1, 2] })).toBeTruthy();
+  expect(deepEqual(null, 1)).toBeFalsy();
+  expect(deepEqual([], {})).toBeFalsy();
+  expect(deepEqual([1], [])).toBeFalsy();
+  expect(deepEqual([1], [2])).toBeFalsy();
+  expect(deepEqual({ a: 1 }, {})).toBeFalsy();
+  expect(deepEqual({ a: 1 }, { a: 2 })).toBeFalsy();
+});
+
+it("uid", async () => {
+  expect(uid()).toHaveLength(8);
+});
+
+it("immutable", async () => {
+  const a = 1;
+  expect(immutable(a)()).toEqual(1);
 });

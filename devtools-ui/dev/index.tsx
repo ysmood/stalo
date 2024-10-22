@@ -1,20 +1,13 @@
 import ReactDOM from "react-dom/client";
-import connect from "../src/connect";
 import { App } from "./Components";
 import { StrictMode } from "react";
 
-connect();
+const root = document.createElement("div");
 
-setup();
+document.body.appendChild(root);
 
-function setup() {
-  const root = document.createElement("div");
-
-  document.body.appendChild(root);
-
-  ReactDOM.createRoot(root).render(
-    <StrictMode>
-      <App />
-    </StrictMode>
-  );
-}
+ReactDOM.createRoot(root).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);

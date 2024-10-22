@@ -1,52 +1,59 @@
 import ReactDOM from "react-dom/client";
 import { onMessage, sendMessage } from "webext-bridge/devtools";
-import { eventInit, eventRecord, eventUpdate } from "./types";
-import { Record } from "stalo/lib/devtools";
-import { unplug, plug, Connection, Panel } from "@stalo/devtools-ui";
+import {
+  eventGet,
+  eventInit,
+  eventRecord,
+  eventSet,
+  Get,
+  Init,
+  Record as Rec,
+  Set,
+} from "./constants";
+import { unplug, Connection, Panel, plug } from "@stalo/devtools-ui";
 
 connect();
+render();
 
-const root = document.createElement("div");
+function render() {
+  const root = document.createElement("div");
 
-document.body.appendChild(root);
+  document.body.appendChild(root);
 
-ReactDOM.createRoot(root).render(<Panel />);
+  ReactDOM.createRoot(root).render(<Panel chromeExtension />);
+}
 
 function connect() {
-  const list: Connection[] = [];
+  const list: Record<string, Connection> = {};
 
   chrome.runtime.onConnect.addListener((port) => {
     port.onDisconnect.addListener(() => {
-      list.forEach((_, id) => {
-        unplug(id);
-      });
+      Object.keys(list).forEach((id) => unplug(id));
     });
   });
 
-  onMessage(eventInit, async ({ data }) => {
-    const [id, name, rec] = data as unknown as [
-      number,
-      string,
-      Record<unknown>
-    ];
-
+  onMessage<Init>(eventInit, ({ data }) => {
     const conn: Connection = {
-      id,
-      name,
-      setState(json) {
-        sendMessage(eventUpdate, [id, json], "content-script");
+      id: data.sessionID,
+      name: data.name,
+      getState: async () => {
+        const req: Get = data.sessionID;
+        return await sendMessage(eventGet, req, "window");
+      },
+      setState: (state) => {
+        const req: Set = { id: data.sessionID, state };
+        sendMessage(eventSet, req, "window");
       },
     };
 
-    list[id] = conn;
-
     plug(conn);
 
-    conn.onInit?.(rec);
+    conn.onInit?.(data.record);
+
+    list[conn.id] = conn;
   });
 
-  onMessage(eventRecord, async ({ data }) => {
-    const [id, rec] = data as unknown as [number, Record<unknown>];
-    list[id].onRecord?.(rec);
+  onMessage<Rec>(eventRecord, ({ data }) => {
+    list[data.id]?.onRecord?.(data.record);
   });
 }

@@ -1,5 +1,5 @@
 import { setStore, useStore } from "..";
-import { Filter } from "./types";
+import { Filter } from "./constants";
 
 export const useFilter = () => {
   return useStore((state) => state.filter);

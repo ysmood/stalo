@@ -1,5 +1,5 @@
 import { producer, SetStore } from ".";
-import { type Middleware } from "./utils";
+import { uid, type Middleware } from "./utils";
 
 export const name = Symbol("action-name");
 export const description = Symbol("description");
@@ -12,6 +12,7 @@ export type DevtoolsOptions = {
 };
 
 export type Record<S> = {
+  id: string;
   name: string;
   state: S;
   description?: string;
@@ -19,8 +20,6 @@ export type Record<S> = {
 };
 
 export const noName = "@@no-name";
-
-export const initName = "@@init";
 
 export default function devtools<S>(init: S, devName = ""): Middleware<S> {
   return (set) => {
@@ -33,14 +32,7 @@ export default function devtools<S>(init: S, devName = ""): Middleware<S> {
       win[devtoolsKey] = [];
     }
 
-    win[devtoolsKey].push(
-      new Devtools(
-        devName,
-        { name: initName, state: init, createdAt: Date.now() },
-        set,
-        subscribers
-      )
-    );
+    win[devtoolsKey].push(new Devtools(devName, init, set, subscribers));
 
     window.dispatchEvent(new CustomEvent(devtoolsKey));
 
@@ -49,14 +41,15 @@ export default function devtools<S>(init: S, devName = ""): Middleware<S> {
       set((prev) => {
         const curr = produce(prev);
 
-        subscribers.forEach((s) =>
-          s({
-            state: curr,
-            name: options && options[name] ? options[name] : noName,
-            description: options?.[description],
-            createdAt: Date.now(),
-          })
-        );
+        const rec = {
+          id: uid(),
+          state: curr,
+          name: options && options[name] ? options[name] : noName,
+          description: options?.[description],
+          createdAt: Date.now(),
+        };
+
+        subscribers.forEach((s) => s(rec));
 
         return curr;
       }, options);
@@ -64,20 +57,28 @@ export default function devtools<S>(init: S, devName = ""): Middleware<S> {
   };
 }
 
-export function getDevtools<S>(): Devtools<S>[] | undefined {
+export function getDevtools<S>(): Devtools<S>[] {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (window as any)[devtoolsKey];
+  return (window as any)[devtoolsKey] || [];
 }
 
 type Subscriber<S> = (record: Record<S>) => void;
 
 export class Devtools<S> {
+  private current: S;
+
   constructor(
     readonly name: string,
-    readonly initRecord: Record<S>,
+    init: S,
     private set: SetStore<S>,
-    private subscribers: Set<Subscriber<S>>
-  ) {}
+    private subscribers: Set<Subscriber<S>>,
+    readonly id = uid()
+  ) {
+    this.current = init;
+    this.subscribe(({ state }) => {
+      this.current = state;
+    });
+  }
 
   subscribe(cb: (record: Record<S>) => void) {
     this.subscribers.add(cb);
@@ -91,6 +92,14 @@ export class Devtools<S> {
    * Set the current state without creating history.
    */
   set state(s: S) {
+    this.current = s;
     this.set(() => s);
+  }
+
+  /**
+   * Peak the current state without hooking into React.
+   */
+  get state() {
+    return this.current;
   }
 }

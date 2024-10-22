@@ -5,7 +5,7 @@
     "target": "ESNext",
     "lib": ["DOM", "ES2020"],
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "skipLibCheck": true,
     "rootDir": "./src",
     "outDir": "./lib",

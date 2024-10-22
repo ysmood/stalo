@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { setFilter } from "./store/filter";
-import { filters } from "./store/filter/types";
+import { filters } from "./store/filter/constants";
 
 // The component to filter the todos.
 export default function Filter() {

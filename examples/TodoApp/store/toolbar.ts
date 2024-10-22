@@ -1,5 +1,5 @@
 import { setStore, useStore } from ".";
-import { initTodo } from "./todos/types";
+import { initTodo } from "./todos/constants";
 import { filterTodos } from "./todos";
 
 // Add a new empty todo to the list.

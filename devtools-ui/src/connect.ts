@@ -1,26 +1,45 @@
 import { getDevtools } from "stalo/lib/devtools";
-import { plug, Connection } from "./store";
+import { plug, unplug } from "./store";
+import { Connection, initName } from "./store/constants";
+import { uid } from "stalo/lib/utils";
 
 export default function connect() {
-  const list = getDevtools();
+  const list = getDevtools<object>();
 
-  if (!list) return;
+  const closes: (() => void)[] = [];
 
-  list.forEach((dt, i) => {
+  list.forEach((dt) => {
     const conn: Connection = {
-      id: i,
+      id: dt.id,
       name: dt.name,
-      setState(json) {
-        dt.state = JSON.parse(json);
+      setState(state) {
+        dt.state = state;
+      },
+      async getState() {
+        return dt.state;
       },
     };
 
     plug(conn);
 
-    conn.onInit?.(dt.initRecord);
+    conn.onInit?.({
+      id: uid(),
+      name: initName,
+      state: dt.state,
+      createdAt: Date.now(),
+    });
 
-    dt.subscribe((rec) => {
+    const close = dt.subscribe((rec) => {
       conn.onRecord?.(rec);
     });
+
+    closes.push(() => {
+      close();
+      unplug(conn.id);
+    });
   });
+
+  return () => {
+    closes.forEach((c) => c());
+  };
 }

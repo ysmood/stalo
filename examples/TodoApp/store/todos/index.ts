@@ -1,6 +1,6 @@
 import { setStore, Store, useStore } from "..";
 import { numbersEqual } from "./utils";
-import { Filter } from "../filter/types";
+import { Filter } from "../filter/constants";
 import { useEqual } from "stalo/lib/utils";
 import { name } from "stalo/lib/devtools";
 

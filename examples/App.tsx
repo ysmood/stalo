@@ -2,7 +2,13 @@ import "./index.css";
 import { Link, Switch, Router, Route } from "wouter";
 import { lazy, Suspense } from "react";
 
-const examples = ["Counter", "CounterPersistent", "MonolithStore", "TodoApp"];
+const examples = [
+  "Counter",
+  "CounterPersistent",
+  "MonolithStore",
+  "TodoApp",
+  "Devtools",
+];
 
 export default function App() {
   return (

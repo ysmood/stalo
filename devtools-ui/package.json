@@ -11,7 +11,6 @@
   "publishConfig": {
     "provenance": true
   },
-  "main": "./lib/index.js",
   "exports": {
     ".": "./lib/index.js"
   },
@@ -23,14 +22,14 @@
     "url": "https://github.com/ysmood/stalo/tree/main/packages/devtools-ui"
   },
   "dependencies": {
-    "@codemirror/lang-json": "^6.0.1",
     "@emotion/css": "^11.13.4",
-    "@uiw/codemirror-theme-okaidia": "^4.23.5",
-    "@uiw/react-codemirror": "^4.23.5",
-    "deep-equal": "^2.2.3",
+    "debounce": "^2.2.0",
+    "monaco-editor": "^0.52.0",
+    "react-icons": "^5.3.0",
+    "react-virtualized": "^9.22.5",
     "stalo": "^0.6.4"
   },
   "devDependencies": {
-    "@types/deep-equal": "^1.0.4"
+    "@types/react-virtualized": "^9.21.30"
   }
 }
