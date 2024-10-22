@@ -8,7 +8,8 @@
     "build": "tsc -b --clean && tsc -b",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "build-extension": "npm run -w devtools-ui build && npm run -w chrome-extension build"
   },
   "main": "./lib/index.js",
   "exports": {
@@ -57,13 +58,13 @@
     "typescript": "^5.5.2",
     "vite": "^5.4.8",
     "vitest": "^2.1.2",
-    "webext-bridge": "^6.0.1",
     "wouter": "^3.3.5"
   },
   "publishConfig": {
     "provenance": true
   },
   "workspaces": [
-    "devtools-ui"
+    "devtools-ui",
+    "chrome-extension"
   ]
 }

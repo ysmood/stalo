@@ -12,8 +12,12 @@ of each implementation.
 
 ### stalo
 
+As you can see stalo will only rerender the minimal components when the state is updated.
+
 ![stalo](https://github.com/user-attachments/assets/dc405ff6-fe6e-40f5-8703-e0a2e1aa7b8e)
 
 ### [todomvc.com](https://todomvc.com/examples/react/dist/)
+
+As you can see todomvc will almost rerender the whole app no matter what part of the state is updated.
 
 ![todomvc](https://github.com/user-attachments/assets/9e175ab1-0a16-4819-a079-c3ffb4238695)
