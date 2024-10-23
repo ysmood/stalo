@@ -14,6 +14,8 @@ it("devtools", async () => {
     }, opts);
   };
 
+  expect(getDevtools()).toHaveLength(0);
+
   const setStore = compose(set, addOne, devtools(init));
 
   compose(set, addOne, devtools(init));
