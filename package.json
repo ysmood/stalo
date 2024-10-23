@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npm run build && vite --open",
     "test": "npm run build && vitest run --coverage && playwright test",
-    "build": "tsc -b --clean && tsc -b",
+    "build": "tsc -b --clean && tsc -b && npm run -w devtools-ui build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
