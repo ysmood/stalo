@@ -134,6 +134,14 @@ export function commit() {
   });
 }
 
+export function useSetState() {
+  return useSession((s) => s.connection().setState);
+}
+
+export function useEditorValue() {
+  return useSession((s) => s.getEditorValue);
+}
+
 export function useGetState() {
   return useSession((s) => s.connection().getState);
 }

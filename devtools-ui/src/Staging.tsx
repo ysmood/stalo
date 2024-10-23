@@ -1,4 +1,14 @@
-import { commit, format, revert, useGetState } from "./store";
+import {
+  commit,
+  format,
+  revert,
+  selectRecord,
+  useEditorValue,
+  useGetState,
+  useRecordIDs,
+  useSelected,
+  useSetState,
+} from "./store";
 import { css } from "@emotion/css";
 import { Button, Title } from "./Components";
 import { MonacoEditor } from "./MonacoEditor";
@@ -37,6 +47,35 @@ function Toolbar() {
         className="format"
         title="Format json"
       />
+
+      <Travel />
+    </div>
+  );
+}
+
+function Travel() {
+  const list = useRecordIDs();
+  const selected = useSelected();
+  const value = list.indexOf(selected);
+  const setState = useSetState();
+  const editorValue = useEditorValue();
+
+  return (
+    <div className="travel">
+      <Title text="Travel" />
+      <input
+        type="range"
+        step={1}
+        min={0}
+        max={list.length - 1}
+        value={value}
+        title="Time travel the state records by dragging the slider"
+        onChange={async (e) => {
+          const index = parseInt(e.target.value);
+          selectRecord(list[index]);
+          setState(JSON.parse(editorValue()));
+        }}
+      />
     </div>
   );
 }
@@ -56,6 +95,21 @@ const style = css({
 
     ".format": {
       fontFamily: "monospace",
+    },
+
+    ".travel": {
+      display: "grid",
+      gridTemplateColumns: "auto 1fr",
+      flex: 1,
+      gap: 10,
+      padding: "0 10px",
+
+      input: {
+        opacity: 0.5,
+        ":hover, :focus": {
+          opacity: 1,
+        },
+      },
     },
   },
 
