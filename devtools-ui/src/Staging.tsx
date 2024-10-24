@@ -2,18 +2,17 @@ import {
   commit,
   format,
   revert,
-  selectRecord,
   useEditorValue,
   useGetState,
-  useRecordIDs,
-  useSelected,
   useSetState,
-} from "./store";
+} from "./store/staging";
+import { selectRecord, useSelected } from "./store/history";
 import { css } from "@emotion/css";
 import { Button, Title } from "./Components";
 import { MonacoEditor } from "./MonacoEditor";
 import { LuCheck, LuUndoDot } from "react-icons/lu";
 import { VscSymbolNamespace } from "react-icons/vsc";
+import { useFiltered } from "./store/filter";
 
 export default function Staging() {
   return (
@@ -54,9 +53,8 @@ function Toolbar() {
 }
 
 function Travel() {
-  const list = useRecordIDs();
-  const selected = useSelected();
-  const value = list.indexOf(selected);
+  const filtered = useFiltered();
+  const value = filtered.indexOf(useSelected());
   const setState = useSetState();
   const editorValue = useEditorValue();
 
@@ -67,12 +65,12 @@ function Travel() {
         type="range"
         step={1}
         min={0}
-        max={list.length - 1}
+        max={filtered.length - 1}
         value={value}
         title="Time travel the state records by dragging the slider"
         onChange={async (e) => {
           const index = parseInt(e.target.value);
-          selectRecord(list[index]);
+          selectRecord(filtered[index]);
           setState(JSON.parse(editorValue()));
         }}
       />

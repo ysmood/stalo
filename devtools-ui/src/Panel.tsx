@@ -16,7 +16,11 @@ export default function Panel({
   height?: number;
 }) {
   useEffect(() => {
-    if (!chromeExtension) return connect();
+    if (!chromeExtension) {
+      const stop = new AbortController();
+      connect(stop.signal);
+      return () => stop.abort();
+    }
   }, [chromeExtension]);
 
   return (

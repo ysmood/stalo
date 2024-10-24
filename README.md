@@ -9,9 +9,9 @@ All the non-core functions are just examples of how you can compose functions to
 - **Non-opinionated**: Like useState, only one core function, others are built on top of it.
 - **Type safe**: The state is type safe and the return value is intuitive.
 - **Global**: The state is global, you can access it anywhere.
-- **Scalable**: Naturally scale large state into multiple modules and files without performance degradation.
+- **Scalable**: Naturally [scale large state](https://github.com/ysmood/stalo/issues/4) into multiple modules and files without performance degradation.
 - **Middlewares**: Simple and type-safe middleware composition interface.
-- **Tiny**: About [0.3KB](https://bundlephobia.com/package/stalo) Minified + Gzipped.
+- **Tiny**: The core is about [0.3KB](https://bundlephobia.com/package/stalo) Minified + Gzipped.
 - **Devtools**: Native [devtools](https://github.com/ysmood/stalo/issues/3) support.
 
 ## Documentation
@@ -38,7 +38,7 @@ export default function App() {
 
 Check the [Counter](./examples/Counter.tsx) for basic usage, or try it [online](https://codesandbox.io/p/sandbox/jtfywj).
 
-Check the [CounterPersistent](./examples/CounterPersistent.tsx), [MonolithStore](./examples/MonolithStore), [TodoApp](./examples/TodoApp) for more advanced usage.
+Check the [CounterPersistent](./examples/CounterPersistent.tsx), [MonolithStore](./examples/MonolithStore), [TodoApp](./examples/TodoApp), [Devtools](./examples/Devtools.tsx) for more advanced usage.
 
 ## FAQ
 

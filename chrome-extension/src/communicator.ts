@@ -1,4 +1,4 @@
-import { getDevtools, devtoolsKey, Devtools } from "stalo/lib/devtools";
+import { getDevtools, DEVTOOLS, Devtools } from "stalo/lib/devtools";
 import { initName } from "@stalo/devtools-ui";
 import { sendMessage, setNamespace, onMessage } from "webext-bridge/window";
 import {
@@ -12,7 +12,6 @@ import {
   Record as Rec,
   Set,
 } from "./constants";
-import { uid } from "stalo/lib/utils";
 
 connectAll();
 
@@ -30,7 +29,7 @@ async function connectAll() {
     });
   }
 
-  window.addEventListener(devtoolsKey, () => {
+  window.addEventListener(DEVTOOLS, () => {
     updateList();
   });
 
@@ -50,9 +49,7 @@ function connect(d: Devtools<object>) {
     sessionID: d.id,
     name: d.name,
     record: {
-      id: uid(),
       name: initName,
-      description: "Initial state when devtools is opened",
       state: d.state,
       createdAt: Date.now(),
     },

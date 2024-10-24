@@ -1,35 +1,37 @@
-import { Record as Rec } from "stalo/lib/devtools";
+import { StoreRecord } from "stalo/lib/devtools";
 import { immutable } from "stalo/lib/utils";
-import { noName } from "stalo/lib/devtools";
-import History from "./history";
+import History from "./history.class";
 
-export const initName = "@@init";
-export const commitName = "@@commit";
+export const initName = "@init";
+export const commitName = "@commit";
 
 export interface Connection {
   id: string;
   name: string;
   setState(state: object): void;
   getState(): Promise<object>;
-  onInit?: (data: Rec<object>) => void;
-  onRecord?: (data: Rec<object>) => void;
+  onInit?: (data: StoreRecord<object>) => void;
+  onRecord?: (data: StoreRecord<object>) => void;
 }
 
 export const emptySession = {
   id: "",
   name: "none",
-  selected: "",
+
   staging: "",
   getEditorValue: () => "",
   setEditorValue: (() => {}) as (value: string) => void,
+
+  selected: -1,
   history: new History(),
-  filter: "",
+
   connection: immutable<Connection>({
     id: "",
-    name: noName,
+    name: "",
     setState: () => {},
     getState: async () => ({}),
   }),
+
   recordScroll: 0,
 };
 

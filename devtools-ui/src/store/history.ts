@@ -1,39 +1,47 @@
-import { immerable } from "immer";
-import { Record } from "stalo/lib/devtools";
-import { Immutable, immutable } from "stalo/lib/utils";
+import { setSession, useSession } from "./session";
+import { recordHeight } from "./constants";
 
-export default class History {
-  [immerable] = true;
+export function useRecord(i: number) {
+  return useSession((s) => s.history.get(i));
+}
 
-  private map = new Map<string, Immutable<Record<object>>>();
-  readonly ids = [] as string[];
+export function useRecords() {
+  return useSession((s) => s.history.list);
+}
 
-  private static emptyRecord: Record<object> = {
-    id: "",
-    state: {},
-    name: "",
-    description: "",
-    createdAt: 0,
-  };
+// diff between a record with the selected record
+export function useTimeDiff(i: number) {
+  return useSession((s) => {
+    return s.history.get(i).createdAt - s.history.get(s.selected).createdAt;
+  });
+}
 
-  constructor(...records: Record<object>[]) {
-    records.forEach((rec) => {
-      this.add(rec);
-    });
-  }
+export function useSelected() {
+  return useSession((s) => s.selected);
+}
 
-  add(rec: Record<object>) {
-    this.map.set(rec.id, immutable(rec));
+export function selectRecord(i: number) {
+  setSession((s) => {
+    s.selected = i;
+    s.staging = JSON.stringify(s.history.get(i).state, null, 2);
+  });
+}
 
-    // Use unshift will make the virtual list super slow.
-    this.ids.push(rec.id);
-  }
+export function useRecordScroll() {
+  return useSession((s) => s.recordScroll);
+}
 
-  get(id: string) {
-    const rec = this.map.get(id);
-    if (!rec) {
-      return History.emptyRecord;
+export function setRecordScroll(index: number) {
+  setSession((s) => {
+    if (index === Infinity) {
+      s.recordScroll = (s.history.list.length - 1) * recordHeight;
+      return;
     }
-    return rec();
-  }
+
+    s.recordScroll = index;
+  });
+}
+
+export function useTotalRecords() {
+  return useSession((s) => s.history.filtered.length);
 }

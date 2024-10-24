@@ -15,6 +15,11 @@ export type Store = typeof initStore;
 
 const [useStore, baseSetStore] = create(initStore);
 
-const setStore = compose(baseSetStore, immer, logger, devtools(initStore));
+const setStore = compose(
+  baseSetStore,
+  immer,
+  logger,
+  devtools(initStore, "TodoApp")
+);
 
 export { useStore, setStore };

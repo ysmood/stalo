@@ -1,5 +1,4 @@
 import { css, cx } from "@emotion/css";
-import { noName } from "stalo/lib/devtools";
 import { commitName, initName } from "./store/constants";
 
 export function Button({
@@ -87,13 +86,13 @@ export function Name({
       {(() => {
         switch (name) {
           case initName:
-            return <div className="init">Initial State</div>;
-          case noName:
+            return <div className="init">{name}</div>;
+          case "":
             return <div className="none">No name</div>;
           case commitName:
-            return <div className="commit"> Commit </div>;
+            return <div className="commit">{name}</div>;
           default:
-            return <div className="others">{name.toString()}</div>;
+            return <div className="others">{name}</div>;
         }
       })()}
     </div>

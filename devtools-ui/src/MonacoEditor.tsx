@@ -9,7 +9,8 @@ import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 
 import { useRef, useEffect } from "react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import { setEditorHandlers, useCurrSession, useStaging } from "./store";
+import { useCurrSession } from "./store/session";
+import { setEditorHandlers, useStaging } from "./store/staging";
 import debounce from "debounce";
 
 window.MonacoEnvironment = {

@@ -2,7 +2,7 @@ import { setStore, Store, useStore } from "..";
 import { numbersEqual } from "./utils";
 import { Filter } from "../filter/constants";
 import { useEqual } from "stalo/lib/utils";
-import { name } from "stalo/lib/devtools";
+import { info } from "stalo/lib/devtools";
 
 // Get a todo by id.
 export function useTodo(id: number) {
@@ -39,12 +39,9 @@ export function useZeroDone() {
 
 // Update the text of a todo by id.
 export function updateTodo(id: number, text: string) {
-  setStore(
-    (s) => {
-      findTodo(s, id).text = text;
-    },
-    { [name]: "update-todo" }
-  );
+  setStore((s) => {
+    findTodo(s, id).text = text;
+  }, info("update-todo"));
 }
 
 // Toggle the done state of a todo by id.

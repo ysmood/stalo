@@ -1,6 +1,6 @@
 import { css, cx } from "@emotion/css";
 import { Name, Time } from "./Components";
-import { useRecord, useSelected } from "./store";
+import { useRecord, useSelected } from "./store/history";
 import { LuClock } from "react-icons/lu";
 import { TfiCommentAlt } from "react-icons/tfi";
 import { VscSymbolNumeric } from "react-icons/vsc";
@@ -18,7 +18,7 @@ export function CurrentRecord() {
     <div className={cx(style, "info")}>
       <div className="first-row">
         <div title="ID of the record">
-          <VscSymbolNumeric /> <code className="id">{id}</code>
+          <VscSymbolNumeric /> <code className="id">{record.id}</code>
         </div>
         <div>
           <CiAt size={14} /> <Name name={record.name} />

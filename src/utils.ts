@@ -86,3 +86,7 @@ export type Immutable<T> = () => T;
 export function immutable<T>(obj: T): Immutable<T> {
   return () => obj;
 }
+
+export function isString(value: unknown): value is string {
+  return typeof value === "string";
+}

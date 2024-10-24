@@ -1,7 +1,7 @@
 import { it, expect } from "vitest";
 import create, { producer } from ".";
 import { compose, Middleware } from "./utils";
-import devtools, { description, getDevtools, name, noName } from "./devtools";
+import devtools, { getDevtools, info } from "./devtools";
 import { render } from "@testing-library/react";
 
 it("devtools", async () => {
@@ -31,23 +31,25 @@ it("devtools", async () => {
     switch (count) {
       case 1:
         expect(record.state).toBe(3);
-        expect(record.name).toBe("name");
+        expect(record.name).toBe("foo");
         expect(record.description).toBe("desc");
         break;
       case 2:
         expect(record.state).toBe(4);
-        expect(record.name).toBe(noName);
+        expect(record.name).toBe("");
         expect(record.description).toBeUndefined();
         break;
     }
   });
 
-  setStore(2, { [name]: "name", [description]: "desc" });
+  function foo() {}
+
+  setStore(2, info(foo, "desc"));
   setStore(3);
 
   close();
 
-  setStore(3);
+  setStore(3, info("foo", "desc"));
 
   expect(count).toBe(2);
 

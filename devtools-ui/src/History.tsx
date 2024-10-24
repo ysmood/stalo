@@ -1,36 +1,28 @@
 import { css, cx } from "@emotion/css";
+import { useCurrSession, useSessions, selectSession } from "./store/session";
 import {
   selectRecord,
-  selectSession,
-  useRecordIDs,
   useRecord,
   useSelected,
-  useCurrSession,
-  useSessions,
   useTimeDiff,
   useTotalRecords,
   useRecordScroll,
   setRecordScroll,
-  setFilter,
-  useFilter,
-  useRecords,
-} from "./store";
+} from "./store/history";
+import { setFilter, useFiltered } from "./store/filter";
 import { Button, Name, Title } from "./Components";
 import { List, AutoSizer } from "react-virtualized";
 import { recordHeight } from "./store/constants";
 import { LuArrowUpToLine, LuArrowDownToLine } from "react-icons/lu";
 import { useState } from "react";
-import { fuzzyMatch } from "./store/utils";
+import { LuDatabase } from "react-icons/lu";
+import { IoDocumentTextOutline } from "react-icons/io5";
 
 export default function History() {
   return (
     <div className={style}>
       <div className="header">
-        <Title className="title" text="History" />
-        <Sessions />
-        <div className="session-id">
-          Session: <code>{useCurrSession()}</code>
-        </div>
+        <Header />
       </div>
       <div className="records">
         <ItemList />
@@ -42,12 +34,25 @@ export default function History() {
   );
 }
 
+function Header() {
+  return (
+    <>
+      <Title className="title" text="History" />
+      <Sessions />
+      <div className="session-id">
+        <LuDatabase /> <code>{useCurrSession()}</code>
+      </div>
+    </>
+  );
+}
+
 function Footer() {
   return (
     <>
       <Filter />
       <div className="total">
-        <span>{useTotalRecords()} records</span>
+        <IoDocumentTextOutline size={12} />
+        <span>{useTotalRecords()}</span>
       </div>
       <Button
         onClick={() => {
@@ -107,16 +112,7 @@ function Sessions() {
 
 function ItemList() {
   const scroll = useRecordScroll();
-  const list = useRecords();
-  const filter = useFilter();
-  const ids = useRecordIDs().filter((id) => {
-    const rec = list.get(id);
-    return (
-      fuzzyMatch(rec.name, filter) ||
-      fuzzyMatch(rec.description || "", filter) ||
-      fuzzyMatch(id, filter)
-    );
-  });
+  const filtered = useFiltered();
 
   return (
     <AutoSizer>
@@ -124,10 +120,10 @@ function ItemList() {
         <List
           width={width}
           height={height}
-          rowCount={ids.length}
+          rowCount={filtered.length}
           rowHeight={recordHeight}
-          rowRenderer={({ key, index, style }) => {
-            return <Item key={key} id={ids[index]} num={index} style={style} />;
+          rowRenderer={({ key, index: i, style }) => {
+            return <Item key={key} index={filtered[i]} style={style} />;
           }}
           scrollTop={scroll}
           onScroll={({ scrollTop }) => {
@@ -139,29 +135,21 @@ function ItemList() {
   );
 }
 
-function Item({
-  id,
-  style,
-  num,
-}: {
-  id: string;
-  num: number;
-  style: React.CSSProperties;
-}) {
-  const rec = useRecord(id);
+function Item({ index, style }: { index: number; style: React.CSSProperties }) {
+  const rec = useRecord(index);
 
   return (
     <div
       className={cx("item", {
-        selected: useSelected() === id,
+        selected: useSelected() === index,
       })}
-      onClick={() => selectRecord(id)}
+      onClick={() => selectRecord(index)}
       style={style}
     >
       <div className="line title">
         <Name className="name" name={rec.name} />
-        <TimeDiff duration={useTimeDiff(id)} />
-        <code className="index">{num.toString().padStart(4, " ")}</code>
+        <TimeDiff duration={useTimeDiff(index)} />
+        <code className="index">{index.toString().padStart(4, " ")}</code>
       </div>
       <div className="line light">
         {rec.description === undefined ? NoDescription() : rec.description}
@@ -223,11 +211,15 @@ const style = css({
       color: "white",
       padding: "0 5px",
       borderRadius: 3,
+      width: "10em",
     },
 
     ".session-id": {
       fontSize: 10,
       color: "#777",
+      display: "flex",
+      alignItems: "center",
+      gap: 3,
     },
   },
 
@@ -249,6 +241,7 @@ const style = css({
 
     ".total": {
       flex: 1,
+      gap: 3,
       display: "flex",
       alignItems: "center",
       paddingLeft: 10,

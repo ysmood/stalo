@@ -1,45 +1,48 @@
-import { getDevtools } from "stalo/lib/devtools";
+import { Devtools, getDevtools } from "stalo/lib/devtools";
 import { plug, unplug } from "./store";
 import { Connection, initName } from "./store/constants";
-import { uid } from "stalo/lib/utils";
 
-export default function connect() {
-  const list = getDevtools<object>();
+export default async function connect(stop: AbortSignal) {
+  const connected = new Set<Devtools<object>>();
 
-  const closes: (() => void)[] = [];
+  while (!stop.aborted) {
+    getDevtools<object>().forEach((d) => {
+      if (connected.has(d)) return;
 
-  list.forEach((dt) => {
-    const conn: Connection = {
-      id: dt.id,
-      name: dt.name,
-      setState(state) {
-        dt.state = state;
-      },
-      async getState() {
-        return dt.state;
-      },
-    };
+      connected.add(d);
 
-    plug(conn);
+      const conn: Connection = {
+        id: d.id,
+        name: d.name,
+        setState(state) {
+          d.state = state;
+        },
+        async getState() {
+          return d.state;
+        },
+      };
 
-    conn.onInit?.({
-      id: uid(),
-      name: initName,
-      state: dt.state,
-      createdAt: Date.now(),
+      plug(conn);
+
+      conn.onInit?.({
+        name: initName,
+        state: d.state,
+        createdAt: Date.now(),
+      });
+
+      const close = d.subscribe((rec) => {
+        conn.onRecord?.(rec);
+      });
+
+      stop.addEventListener("abort", () => {
+        close();
+        unplug(conn.id);
+      });
     });
 
-    const close = dt.subscribe((rec) => {
-      conn.onRecord?.(rec);
+    await new Promise((r) => {
+      const timer = setTimeout(r, 1000);
+      stop.addEventListener("abort", () => clearTimeout(timer));
     });
-
-    closes.push(() => {
-      close();
-      unplug(conn.id);
-    });
-  });
-
-  return () => {
-    closes.forEach((c) => c());
-  };
+  }
 }

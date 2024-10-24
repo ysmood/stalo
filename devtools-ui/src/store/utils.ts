@@ -26,18 +26,3 @@ export function bufferedCall<T>(delay: number, callback: Callback<T>) {
     lastCallTime = now;
   };
 }
-
-export function fuzzyMatch(input: string, pattern: string): boolean {
-  let patternIndex = 0;
-
-  for (let i = 0; i < input.length; i++) {
-    if (input[i] === pattern[patternIndex]) {
-      patternIndex++;
-    }
-    if (patternIndex === pattern.length) {
-      return true;
-    }
-  }
-
-  return false;
-}

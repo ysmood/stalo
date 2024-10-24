@@ -1,50 +1,37 @@
 import { producer, SetStore } from ".";
-import { uid, type Middleware } from "./utils";
+import { isString, uid, type Middleware } from "./utils";
 
-export const name = Symbol("action-name");
-export const description = Symbol("description");
+const name = Symbol("action-name");
+const description = Symbol("description");
 
-export const devtoolsKey = "__stalo_devtools__";
+export const DEVTOOLS = "__stalo_devtools__";
 
 export type DevtoolsOptions = {
   [name]?: string;
   [description]?: string;
 };
 
-export type Record<S> = {
-  id: string;
+export type StoreRecord<S> = {
   name: string;
   state: S;
   description?: string;
   createdAt: number;
 };
 
-export const noName = "@@no-name";
-
 export default function devtools<S>(init: S, devName = ""): Middleware<S> {
   return (set) => {
     const subscribers = new Set<Subscriber<S>>();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-
-    if (!win[devtoolsKey]) {
-      win[devtoolsKey] = [];
-    }
-
-    win[devtoolsKey].push(new Devtools(devName, init, set, subscribers));
-
-    window.dispatchEvent(new CustomEvent(devtoolsKey));
+    addToGlobal(new Devtools(devName, init, set, subscribers));
 
     return (ns, options?: DevtoolsOptions) => {
       const produce = producer(ns);
       set((prev) => {
         const curr = produce(prev);
 
-        const rec = {
-          id: uid(),
+        const rec: StoreRecord<S> = {
           state: curr,
-          name: options && options[name] ? options[name] : noName,
+          name: options?.[name] || "",
           description: options?.[description],
           createdAt: Date.now(),
         };
@@ -57,12 +44,25 @@ export default function devtools<S>(init: S, devName = ""): Middleware<S> {
   };
 }
 
-export function getDevtools<S>(): Devtools<S>[] {
+function addToGlobal<S>(dt: Devtools<S>) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (window as any)[devtoolsKey] || [];
+  const win = window as any;
+
+  if (!win[DEVTOOLS]) {
+    win[DEVTOOLS] = [];
+  }
+
+  win[DEVTOOLS].push(dt);
+
+  window.dispatchEvent(new CustomEvent(DEVTOOLS));
 }
 
-type Subscriber<S> = (record: Record<S>) => void;
+export function getDevtools<S>(): Devtools<S>[] {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (window as any)[DEVTOOLS] || [];
+}
+
+type Subscriber<S> = (record: StoreRecord<S>) => void;
 
 export class Devtools<S> {
   private current: S;
@@ -80,7 +80,7 @@ export class Devtools<S> {
     });
   }
 
-  subscribe(cb: (record: Record<S>) => void) {
+  subscribe(cb: (record: StoreRecord<S>) => void) {
     this.subscribers.add(cb);
 
     return () => {
@@ -102,4 +102,20 @@ export class Devtools<S> {
   get state() {
     return this.current;
   }
+}
+
+/**
+ * A shortcut to create a devtools option.
+ * @param action A identifier for the action, better to be unique and easy to filter.
+ * It's recommended to use the function as the action.
+ * @param actionDescription A description for the action to help you understand what's going on.
+ */
+export function info(
+  action: string | { name: string },
+  actionDescription?: string
+): DevtoolsOptions {
+  return {
+    [name]: isString(action) ? action : action.name,
+    [description]: actionDescription,
+  };
 }

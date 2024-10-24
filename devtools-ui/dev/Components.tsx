@@ -1,7 +1,7 @@
 import create, { SetStore, UseStore } from "stalo";
 import Panel from "../src/Panel";
 import { compose } from "stalo/lib/utils";
-import devtools, { description, name } from "stalo/lib/devtools";
+import devtools, { info } from "stalo/lib/devtools";
 import immer from "stalo/lib/immer";
 
 type Store = {
@@ -66,15 +66,9 @@ function Button({ id, n }: { id: number; n: number }) {
     <button
       onClick={() => {
         for (let i = 0; i < n; i++) {
-          setList[id](
-            (s) => {
-              s.val++;
-            },
-            {
-              [name]: "Increment",
-              [description]: `Increase the count by ${n}`,
-            }
-          );
+          setList[id]((s) => {
+            s.val++;
+          }, info("Increment", `Increase the count by ${n}`));
         }
       }}
     >
