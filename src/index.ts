@@ -2,6 +2,8 @@ import { useSyncExternalStore } from "react";
 
 /**
  * A function to select a part of the state to return.
+ * The selector should be a pure function with no side effects.
+ * It should not return a new object every time, or it will cause infinite re-renders.
  */
 export type Selector<S, R> = (state: S, serverSide: boolean) => R;
 
