@@ -13,6 +13,7 @@ export default class History {
   private static fuseOptions: IFuseOptions<StoreRecordX> = {
     keys: ["id", "name", "description"],
     ignoreLocation: true,
+    isCaseSensitive: true,
     threshold: 0,
     useExtendedSearch: true,
   };
