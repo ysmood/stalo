@@ -11,4 +11,5 @@ const version = JSON.parse(readFileSync('package.json')).version;
 	writeFileSync(p, JSON.stringify(info, null, 2))
 
 	execSync(`git add .`, { stdio: 'inherit' })
+	execSync(`npm i`, { stdio: 'inherit' })
 })
