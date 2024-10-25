@@ -1,11 +1,12 @@
 import { create } from "stalo/lib/immer";
-import { enableMapSet } from "immer";
+import { enableMapSet, setAutoFreeze } from "immer";
 import { immutable } from "stalo/lib/utils";
 import History from "./history.class";
 import { bufferDelay, Connection, emptySession, initStore } from "./constants";
 import { bufferedCall } from "./utils";
 
 enableMapSet();
+setAutoFreeze(false);
 
 export const [useStore, setStore] = create(initStore);
 

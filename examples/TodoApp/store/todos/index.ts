@@ -1,81 +1,62 @@
 import { setStore, Store, useStore } from "..";
-import { numbersEqual } from "./utils";
-import { Filter } from "../filter/constants";
-import { useEqual } from "stalo/lib/utils";
 import { info } from "stalo/lib/devtools";
+import { initTodo } from "./constants";
 
 // Get a todo by id.
-export function useTodo(id: number) {
-  return useStore((s) => findTodo(s, id));
+export function useTodo(id: string) {
+  return useStore((s) => s.todos[id]);
 }
 
-export function useTodoDone(id: number) {
-  return useStore((s) => findTodo(s, id).done);
+export function useTodoDone(id: string) {
+  return useStore((s) => s.todos[id].done);
 }
 
 // Get a new id list only when the ids of the todos change.
-export function useTodoIds() {
-  return useStore(
-    useEqual((s) => {
-      return filterTodos(s, s.filter).map(({ id }) => id);
-    }, numbersEqual)
-  );
-}
-
-export function useZeroCount() {
-  return useStore((s) => {
-    return filterTodos(s, s.filter).map(({ id }) => id).length === 0;
-  });
-}
-
-// Get the count of the left todos.
-export function useLeftCount() {
-  return useStore((s) => s.todos.filter(({ done }) => !done).length);
-}
-
-export function useZeroDone() {
-  return useStore((s) => !s.todos.some(({ done }) => done));
+export function useFilteredIDs() {
+  return useStore((s) => s.filteredIDs);
 }
 
 // Update the text of a todo by id.
-export function updateTodo(id: number, text: string) {
+export function updateTodo(id: string, text: string) {
   setStore((s) => {
-    findTodo(s, id).text = text;
+    s.todos[id].text = text;
   }, info("update-todo"));
 }
 
+export function useLeft() {
+  return useStore(
+    (s) => Object.keys(s.todos).filter((id) => !s.todos[id].done).length
+  );
+}
+
 // Toggle the done state of a todo by id.
-export function toggleTodo(id: number) {
+export function toggleTodo(id: string) {
   setStore((s) => {
-    const todo = findTodo(s, id);
-    if (todo) {
-      todo.done = !todo.done;
-    }
+    toggle(s, id, !s.todos[id].done);
   });
 }
 
 // Delete a todo by id.
-export function delTodo(id: number) {
+export function delTodo(id: string) {
   setStore((s) => {
-    s.todos = s.todos.filter((todo) => todo.id !== id);
+    del(s, id);
   });
 }
 
-// Find a todo by id.
-function findTodo(s: Store, id: number) {
-  return s.todos.find((todo) => todo.id === id)!;
+export function add(s: Store) {
+  const id = Date.now().toString();
+  s.todos[id] = { ...initTodo, id };
+
+  if (s.filter !== "Completed") {
+    s.filteredIDs.unshift(id);
+  }
 }
 
-// Filter the todos by the current status.
-export function filterTodos(s: Store, filter: Filter) {
-  return s.todos.filter(({ done }) => {
-    switch (filter) {
-      case "All":
-        return true;
-      case "Active":
-        return !done;
-      case "Completed":
-        return done;
-    }
-  });
+export function del(s: Store, id: string) {
+  s.filteredIDs = s.filteredIDs.filter((i) => i !== id);
+  delete s.todos[id];
+}
+
+export function toggle(s: Store, id: string, done: boolean) {
+  s.todos[id].done = done;
 }

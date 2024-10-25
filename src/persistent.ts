@@ -1,4 +1,4 @@
-import create, { producer } from ".";
+import create, { produce } from ".";
 import { compose, Middleware } from "./utils";
 import immer from "./immer";
 
@@ -28,9 +28,8 @@ export type URLStorageOptions = { [saveHistory]?: boolean };
 export function urlStorage<S>(storage: URLStorage<S>): Middleware<S> {
   return function (set) {
     return (ns, opts?: URLStorageOptions) => {
-      const produce = producer(ns);
       set((state) => {
-        const s = produce(state);
+        const s = produce(state, ns);
         storage.set(s, opts?.[saveHistory]);
         return s;
       }, opts);
@@ -41,10 +40,9 @@ export function urlStorage<S>(storage: URLStorage<S>): Middleware<S> {
 export function localStorage<S>(storage: LocalStorage<S>): Middleware<S> {
   return function (set) {
     return (ns, opts) => {
-      const produce = producer(ns);
       set((state) => {
         storage.set(state);
-        return produce(state);
+        return produce(state, ns);
       }, opts);
     };
   };

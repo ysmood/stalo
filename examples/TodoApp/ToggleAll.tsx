@@ -1,14 +1,14 @@
-import { toggleAll, useToggleAll } from "./store/toolbar";
-import { useZeroCount } from "./store/todos";
+import { toggleAll, useAllToggled } from "./store/toolbar";
+import { useFilteredIDs } from "./store/todos";
 
 // The component to toggle all todos.
 export default function ToggleAll() {
   return (
     <input
       type="checkbox"
-      checked={useToggleAll()}
+      checked={useAllToggled()}
       onChange={toggleAll}
-      disabled={useZeroCount()}
+      disabled={useFilteredIDs().length === 0}
     />
   );
 }

@@ -1,7 +1,7 @@
 import { it, expect } from "vitest";
 import { userEvent } from "@vitest/browser/context";
 import { render, screen } from "@testing-library/react";
-import create, { producer, SetStore } from ".";
+import create, { produce, SetStore } from ".";
 import {
   compose,
   deepEqual,
@@ -37,18 +37,18 @@ it("selector with equal", async () => {
 it("compose", async () => {
   let state = 0;
   const set: SetStore<number> = (ns) => {
-    state = producer(ns)(state)!;
+    state = produce(state, ns);
   };
 
   const addOne: Middleware<number> = (set) => (ns) => {
     set((s) => {
-      return producer(ns)(s)! + 1;
+      return produce(s, ns) + 1;
     });
   };
 
   const double: Middleware<number> = (set) => (ns) => {
     set((s) => {
-      return producer(ns)(s)! * 2;
+      return produce(s, ns) * 2;
     });
   };
 

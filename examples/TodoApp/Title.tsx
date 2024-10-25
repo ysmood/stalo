@@ -1,5 +1,5 @@
-import { useLeftCount } from "./store/todos";
+import { useLeft } from "./store/todos";
 
 export default function Title() {
-  return <h3>Todo App ({useLeftCount()} todos left)</h3>;
+  return <h3>Todo App ({useLeft()} todos left)</h3>;
 }

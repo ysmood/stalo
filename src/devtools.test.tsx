@@ -1,5 +1,5 @@
 import { it, expect } from "vitest";
-import create, { producer } from ".";
+import create, { produce } from ".";
 import { compose, Middleware } from "./utils";
 import devtools, { getDevtools, info } from "./devtools";
 import { render } from "@testing-library/react";
@@ -10,7 +10,7 @@ it("devtools", async () => {
 
   const addOne: Middleware<number> = (set) => (ns, opts) => {
     set((s) => {
-      return producer(ns)(s)! + 1;
+      return produce(s, ns) + 1;
     }, opts);
   };
 

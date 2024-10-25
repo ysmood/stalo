@@ -104,3 +104,24 @@ describe("server component", async () => {
     expect(screen.getByText("client")).not.toBeNull();
   });
 });
+
+it("react to deep value", async () => {
+  const [useVal, setVal] = create({ val: false });
+
+  function A() {
+    return (
+      <button onClick={() => setVal((s) => ({ val: !s.val }))}>
+        {useVal().val ? "yes" : "no"}
+      </button>
+    );
+  }
+
+  render(
+    <>
+      <A />
+    </>
+  );
+
+  await userEvent.click(await screen.findByText("no"));
+  expect(screen.queryByText("yes")).not.toBeNull();
+});

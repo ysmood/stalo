@@ -14,5 +14,5 @@ export function increase(index: number) {
 
 // Define a getter to calculate the total count of all counters.
 export function useTotalCount() {
-  return useStore((s) => s.counters.reduce((acc, c) => acc + c.count, 0));
+  return useStore((s) => s.counters).reduce((acc, c) => acc + c.count, 0);
 }

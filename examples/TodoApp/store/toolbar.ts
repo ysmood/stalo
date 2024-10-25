@@ -1,44 +1,39 @@
-import { setStore, useStore } from ".";
-import { initTodo } from "./todos/constants";
-import { filterTodos } from "./todos";
+import { setStore, Store, useStore } from ".";
+import { add, del, toggle } from "./todos";
 
 // Add a new empty todo to the list.
 export function addTodo() {
   setStore((s) => {
-    s.todos.unshift({ ...initTodo, id: Date.now() });
+    add(s);
   });
 }
 
 // Clear all completed todos.
 export function clearCompleted() {
   setStore((s) => {
-    s.todos = s.todos.filter(({ done }) => !done);
+    Object.keys(s.todos).forEach((id) => {
+      if (s.todos[id].done) {
+        del(s, id);
+      }
+    });
   });
 }
 
 // Get the toggleAll state.
-export function useToggleAll() {
-  return useStore((s) => {
-    const todos = filterTodos(s, s.filter);
-    if (todos.length === 0) {
-      return false;
-    }
-    return todos.every(({ done }) => done);
-  });
+export function useAllToggled() {
+  return useStore(allToggled);
 }
 
 // Toggle all the current filtered todos.
 export function toggleAll() {
   setStore((s) => {
-    const todos = filterTodos(s, s.filter);
-    if (todos.every(({ done }) => done)) {
-      todos.forEach((todo) => {
-        todo.done = false;
-      });
-    } else {
-      todos.forEach((todo) => {
-        todo.done = true;
-      });
+    const to = !allToggled(s);
+    for (const k of s.filteredIDs) {
+      toggle(s, k, to);
     }
   });
+}
+
+function allToggled(s: Store) {
+  return s.filteredIDs.every((id) => s.todos[id].done);
 }

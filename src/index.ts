@@ -24,6 +24,7 @@ export type UseStore<S> = {
 
 /**
  * A function to produce the next state based on the previous state.
+ * The returned value will be the new state.
  */
 export type Produce<S> = (previous: S) => S | void;
 
@@ -54,16 +55,23 @@ export default function create<S>(init: S) {
     };
   };
 
+  const get =
+    <P>(selector: Selector<S, P>, serverSide: boolean) =>
+    () =>
+      selector(state, serverSide);
+
   const useStore: UseStore<S> = <P>(
     selector: Selector<S, P> = (val: S) => val as unknown as P
   ) => {
-    const get = (serverSide: boolean) => () => selector(state, serverSide);
-    return useSyncExternalStore<S | P>(subscribe, get(false), get(true));
+    return useSyncExternalStore<S | P>(
+      subscribe,
+      get(selector, false),
+      get(selector, true)
+    );
   };
 
   const setStore: SetStore<S> = (ns: NextState<S>) => {
-    // update val with the new value
-    state = producer(ns)(state);
+    state = produce(state, ns);
 
     // notify all listeners
     for (const listener of listeners) {
@@ -78,6 +86,7 @@ export default function create<S>(init: S) {
  * Converts a NextState to a Produce function.
  * @returns
  */
-export function producer<S>(ns: NextState<S>): (s: S) => S {
-  return ns instanceof Function ? (ns as (s: S) => S) : () => ns;
+export function produce<S>(state: S, ns: NextState<S>): S {
+  const res = ns instanceof Function ? ns(state) : ns;
+  return res === undefined ? state : res;
 }

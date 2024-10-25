@@ -1,5 +1,5 @@
-import createState, { producer, NextState, SetStore } from ".";
-import { produce } from "immer";
+import createState, { produce, NextState, SetStore } from ".";
+import { produce as ImmerProduce } from "immer";
 import { compose } from "./utils";
 
 /**
@@ -12,5 +12,5 @@ export function create<S>(init: S) {
 
 export default function immer<S>(set: SetStore<S>) {
   return (ns: NextState<S>, opts?: object) =>
-    set((s) => produce(s, producer(ns)), opts);
+    set((s) => ImmerProduce(s, (draft: S) => produce(draft, ns)), opts);
 }

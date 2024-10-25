@@ -1,4 +1,4 @@
-import { producer, SetStore } from ".";
+import { produce, SetStore } from ".";
 import { isString, uid, type Middleware } from "./utils";
 
 const name = Symbol("action-name");
@@ -25,9 +25,8 @@ export default function devtools<S>(init: S, devName = ""): Middleware<S> {
     addToGlobal(new Devtools(devName, init, set, subscribers));
 
     return (ns, options?: DevtoolsOptions) => {
-      const produce = producer(ns);
       set((prev) => {
-        const curr = produce(prev);
+        const curr = produce(prev, ns);
 
         const rec: StoreRecord<S> = {
           state: curr,

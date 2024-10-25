@@ -1,7 +1,7 @@
 import Filter from "./Filter";
 import { addTodo, clearCompleted } from "./store/toolbar";
-import { useZeroDone } from "./store/todos";
 import ToggleAll from "./ToggleAll";
+import { useTotalCount } from "../MonolithStore/store/counter";
 
 export default function Toolbar() {
   return (
@@ -26,7 +26,7 @@ function ClearCompleted() {
   return (
     <button
       onClick={clearCompleted}
-      disabled={useZeroDone()}
+      disabled={useTotalCount() === 0}
       title="Delete all completed todos"
     >
       ✂️
