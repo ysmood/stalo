@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom/client";
 import { onMessage, sendMessage } from "webext-bridge/devtools";
 import {
+  eventConnect,
   eventGet,
   eventInit,
   eventRecord,
@@ -25,6 +26,8 @@ function render() {
 
 function connect() {
   const list: Record<string, Connection> = {};
+
+  onMessage(eventConnect, () => {});
 
   chrome.runtime.onConnect.addListener((port) => {
     port.onDisconnect.addListener(() => {

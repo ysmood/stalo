@@ -1,6 +1,7 @@
-import { type StoreRecord } from "stalo/lib/devtools";
+import type { StoreRecord } from "stalo/lib/devtools";
 
 export const namespace = "@@stalo";
+export const eventConnect = "@@stalo-connect";
 export const eventInit = "@@stalo-init";
 export const eventRecord = "@@stalo-record";
 export const eventSet = "@@stalo-set";
