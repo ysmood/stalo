@@ -12,7 +12,7 @@ All the non-core functions are just examples of how you can compose functions to
 - **Scalable**: Naturally [scale large state](https://github.com/ysmood/stalo/issues/4) into multiple modules and files without performance degradation.
 - **Middlewares**: Simple and type-safe middleware composition interface.
 - **Tiny**: The core is about [0.3KB](https://bundlephobia.com/package/stalo) Minified + Gzipped.
-- **Devtools**: Native [devtools](https://github.com/ysmood/stalo/issues/3) support.
+- **Devtools**: Native [devtools](https://chromewebstore.google.com/detail/stalo-chrome-extension/ekjljdpfmdpifjkoodfignffanhianch) support.
 
 ## Documentation
 
