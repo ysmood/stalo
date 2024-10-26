@@ -1,7 +1,7 @@
 import { it, expect } from "vitest";
 import create, { produce } from ".";
 import { compose, Middleware } from "./utils";
-import devtools, { getDevtools, info } from "./devtools";
+import devtools, { getDevtools, meta } from "./devtools";
 import { render } from "@testing-library/react";
 
 it("devtools", async () => {
@@ -44,12 +44,12 @@ it("devtools", async () => {
 
   function foo() {}
 
-  setStore(2, info(foo, "desc"));
+  setStore(2, meta(foo, "desc"));
   setStore(3);
 
   close();
 
-  setStore(3, info("foo", "desc"));
+  setStore(3, meta("foo", "desc"));
 
   expect(count).toBe(2);
 

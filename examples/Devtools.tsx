@@ -1,6 +1,6 @@
 import create from "stalo";
 import { compose } from "stalo/lib/utils";
-import devtools, { info } from "stalo/lib/devtools";
+import devtools, { meta } from "stalo/lib/devtools";
 import { Panel } from "@stalo/devtools-ui";
 
 const initStore = 0;
@@ -13,7 +13,7 @@ const setCount = compose(baseSetCount, devtools(initStore, "Demo"));
 
 function increase(n: number) {
   // The info here is optional, but it's useful for debugging.
-  setCount((c) => c + n, info(increase, `Increase the count by ${n}`));
+  setCount((c) => c + n, meta(increase, `Increase the count by ${n}`));
 }
 
 // Here we create 2 count buttons to increase the store value.

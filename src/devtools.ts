@@ -109,7 +109,7 @@ export class Devtools<S> {
  * It's recommended to use the function as the action.
  * @param actionDescription A description for the action to help you understand what's going on.
  */
-export function info(
+export function meta(
   action: string | { name: string },
   actionDescription?: string
 ): DevtoolsOptions {

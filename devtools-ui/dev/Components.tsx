@@ -1,7 +1,7 @@
 import create, { SetStore, UseStore } from "stalo";
 import Panel from "../src/Panel";
 import { compose } from "stalo/lib/utils";
-import devtools, { info } from "stalo/lib/devtools";
+import devtools, { meta } from "stalo/lib/devtools";
 import immer from "stalo/lib/immer";
 
 type Store = {
@@ -68,7 +68,7 @@ function Button({ id, n }: { id: number; n: number }) {
         for (let i = 0; i < n; i++) {
           setList[id]((s) => {
             s.val++;
-          }, info("Increment", `Increase the count by ${n}`));
+          }, meta("Increment", `Increase the count by ${n}`));
         }
       }}
     >

@@ -1,5 +1,5 @@
 import { setStore, Store, useStore } from "..";
-import { info } from "stalo/lib/devtools";
+import { meta } from "stalo/lib/devtools";
 import { initTodo } from "./constants";
 
 // Get a todo by id.
@@ -20,7 +20,7 @@ export function useFilteredIDs() {
 export function updateTodo(id: string, text: string) {
   setStore((s) => {
     s.todos[id].text = text;
-  }, info("update-todo"));
+  }, meta("update-todo"));
 }
 
 export function useLeft() {

@@ -23,8 +23,6 @@ export function setFilter(filter: string) {
   });
 }
 
-export function useFilteredIDs() {}
-
 export function addFilteredID(s: Store, id: string) {
   s.filteredIDs.unshift(id);
 }

@@ -6,7 +6,7 @@ import {
   useTodoDone,
 } from "./store/todos";
 
-type AttrID = { id: number };
+type AttrID = { id: string };
 
 // The component to display a todo.
 export default function TodoItem({ id }: AttrID) {
