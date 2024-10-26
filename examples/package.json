@@ -1,0 +1,12 @@
+{
+  "name": "@stalo/examples",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "lint": "tsc",
+    "build": "echo done"
+  },
+  "dependencies": {
+    "wouter": "^3.3.5"
+  }
+}

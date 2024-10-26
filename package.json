@@ -4,12 +4,11 @@
   "type": "module",
   "scripts": {
     "start": "npm run build && vite --open",
-    "test": "npm run build && vitest run --coverage && playwright test",
-    "build": "tsc -b --clean && tsc -b && npm run -w devtools-ui build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "test": "vitest run --coverage && playwright test",
+    "build": "tsc -b --clean && tsc -b",
+    "lint": "eslint ./src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
-    "build-extension": "npm run -w devtools-ui build && npm run -w chrome-extension build",
     "version": "node sync-version.js"
   },
   "publishConfig": {
@@ -17,7 +16,8 @@
   },
   "workspaces": [
     "devtools-ui",
-    "chrome-extension"
+    "chrome-extension",
+    "examples"
   ],
   "main": "./lib/index.js",
   "exports": {
@@ -64,7 +64,6 @@
     "tslib": "^2.8.0",
     "typescript": "^5.5.2",
     "vite": "^5.4.8",
-    "vitest": "^2.1.2",
-    "wouter": "^3.3.5"
+    "vitest": "^2.1.2"
   }
 }

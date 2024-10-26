@@ -18,4 +18,8 @@ jobs:
           npm install
           npx playwright install chromium --with-deps
 
+      - run: npm run build && npm run -w devtools-ui build
+
+      - run: npm run -ws --include-workspace-root lint
+
       - run: npm test

@@ -15,7 +15,7 @@ function genManifest() {
   const manifest = {
     manifest_version: 3,
     name: "Stalo Chrome Extension",
-    version: "0.0.3",
+    version: JSON.parse(readFileSync("package.json", "utf-8")).version,
     description: "Chrome extension for stalo debugging",
     devtools_page: `${htmlFilename}`,
     icons: {
