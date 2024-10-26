@@ -23,7 +23,16 @@ export function useSelected() {
 export function selectRecord(i: number) {
   setSession((s) => {
     s.selected = i;
-    s.staging = JSON.stringify(s.history.get(i).state, null, 2);
+    s.staging = format(s.history.get(i).state);
+  });
+}
+
+export function travelTo(i: number) {
+  setSession((s) => {
+    s.selected = i;
+    const state = s.history.get(i).state;
+    s.staging = format(state);
+    s.connection().setState(state);
   });
 }
 
@@ -44,4 +53,8 @@ export function setRecordScroll(index: number) {
 
 export function useTotalRecords() {
   return useSession((s) => s.history.filtered.length);
+}
+
+function format(state: object) {
+  return JSON.stringify(state, null, 2);
 }

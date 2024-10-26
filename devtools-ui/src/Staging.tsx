@@ -1,12 +1,5 @@
-import {
-  commit,
-  format,
-  revert,
-  useEditorValue,
-  useGetState,
-  useSetState,
-} from "./store/staging";
-import { selectRecord, useSelected } from "./store/history";
+import { commit, format, revert, useGetState } from "./store/staging";
+import { travelTo, useSelected } from "./store/history";
 import { css } from "@emotion/css";
 import { Button, Title } from "./Components";
 import { MonacoEditor } from "./MonacoEditor";
@@ -55,8 +48,6 @@ function Toolbar() {
 function Travel() {
   const filtered = useFiltered();
   const value = filtered.indexOf(useSelected());
-  const setState = useSetState();
-  const editorValue = useEditorValue();
 
   return (
     <div className="travel">
@@ -70,8 +61,7 @@ function Travel() {
         title="Time travel the state records by dragging the slider"
         onChange={async (e) => {
           const index = parseInt(e.target.value);
-          selectRecord(filtered[index]);
-          setState(JSON.parse(editorValue()));
+          travelTo(filtered[index]);
         }}
       />
     </div>
