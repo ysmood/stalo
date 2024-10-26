@@ -1,4 +1,4 @@
-import { useFilteredIDs } from "./store/todos";
+import { useFilteredIDs } from "./store/filter";
 import TodoItem from "./TodoItem";
 
 // The component to display all filtered todos.

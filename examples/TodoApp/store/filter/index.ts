@@ -1,5 +1,21 @@
 import { setStore, useStore, Store } from "..";
+import { onAdd, onDel } from "../todos";
 import { Filter } from "./constants";
+
+onAdd((s, id) => {
+  if (s.filter !== "Completed") {
+    s.filteredIDs.unshift(id);
+  }
+});
+
+onDel((s, id) => {
+  s.filteredIDs = s.filteredIDs.filter((i) => i !== id);
+});
+
+// Get a new id list only when the ids of the todos change.
+export function useFilteredIDs() {
+  return useStore((s) => s.filteredIDs);
+}
 
 export function useFilter() {
   return useStore((state) => state.filter);

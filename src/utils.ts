@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { SetStore, type Selector } from ".";
+import type { SetStore, Selector } from ".";
 
 export type Equal<R> = (a: R, b: R) => boolean;
 

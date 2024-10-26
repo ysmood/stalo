@@ -1,5 +1,5 @@
 import { toggleAll, useAllToggled } from "./store/toolbar";
-import { useFilteredIDs } from "./store/todos";
+import { useFilteredIDs } from "./store/filter";
 
 // The component to toggle all todos.
 export default function ToggleAll() {
