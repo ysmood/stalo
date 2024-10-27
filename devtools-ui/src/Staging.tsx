@@ -6,6 +6,7 @@ import { MonacoEditor } from "./MonacoEditor";
 import { LuCheck, LuUndoDot } from "react-icons/lu";
 import { VscSymbolNamespace } from "react-icons/vsc";
 import { useFiltered } from "./store/filter";
+import Slider from "./Slider";
 
 export default function Staging() {
   return (
@@ -51,15 +52,14 @@ function Travel() {
   return (
     <div className="travel">
       <Title text="Travel" />
-      <input
-        type="range"
+      <Slider
         step={1}
         min={0}
         max={filtered.size - 1}
         value={value}
         title="Time travel the state records by dragging the slider"
-        onChange={async (e) => {
-          const index = parseInt(e.target.value);
+        onChange={async (val) => {
+          const index = val;
           travelTo(filtered.get(index)!);
         }}
       />
@@ -88,13 +88,20 @@ const style = css({
       display: "grid",
       gridTemplateColumns: "auto 1fr",
       flex: 1,
+      alignItems: "center",
       gap: 10,
       padding: "0 10px",
 
       input: {
         opacity: 0.5,
-        ":hover, :focus": {
+        "&:focus": {
+          opacity: 0.8,
+        },
+        "&:hover": {
           opacity: 1,
+        },
+        "::-webkit-slider-thumb": {
+          backgroundColor: "green",
         },
       },
     },
