@@ -7,15 +7,21 @@ export function Button({
   onClick,
   className,
   title,
+  disabled = false,
 }: {
   icon?: React.ReactElement;
   text?: string;
   onClick?: () => void;
   className?: string;
   title: string;
+  disabled?: boolean;
 }) {
   return (
-    <div onClick={onClick} className={cx(buttonStyle, className)} title={title}>
+    <div
+      onClick={disabled ? undefined : onClick}
+      className={cx(buttonStyle, className, { disabled, active: !disabled })}
+      title={title}
+    >
       {icon} {text}
     </div>
   );
@@ -32,13 +38,18 @@ const buttonStyle = css({
   gap: 5,
   alignItems: "center",
 
-  "&:hover": {
+  "&.active:hover": {
     backgroundColor: "#555",
   },
 
-  "&:active": {
+  "&.active:active": {
     backgroundColor: "#222",
     transform: "scale(0.95)",
+  },
+
+  "&.disabled": {
+    cursor: "not-allowed",
+    opacity: 0.3,
   },
 });
 

@@ -1,5 +1,5 @@
-import { commit, format, revert, useGetState } from "./store/staging";
-import { travelTo, useSelected } from "./store/history";
+import { commit, format, useSameLast } from "./store/staging";
+import { selectRecord, travelTo, useSelected } from "./store/history";
 import { css } from "@emotion/css";
 import { Button, Title } from "./Components";
 import { MonacoEditor } from "./MonacoEditor";
@@ -17,21 +17,20 @@ export default function Staging() {
 }
 
 function Toolbar() {
-  const getState = useGetState();
-
   return (
     <div className="toolbar">
       <Title text="Staging" />
       <Button
-        onClick={() => revert(getState)}
+        onClick={() => selectRecord(-1)}
         icon={<LuUndoDot size={16} />}
-        title="Use current page state as staging content"
+        title="Revert to the last state record"
       />
       <Button
         onClick={() => commit()}
         icon={<LuCheck size={16} color="#20cf20" />}
         text="Commit"
         title="Set page state as staging content"
+        disabled={useSameLast()}
       />
       <Button
         onClick={() => format()}

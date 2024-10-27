@@ -9,7 +9,6 @@ export interface Connection {
   id: string;
   name: string;
   setState(state: object): void;
-  getState(): Promise<object>;
   onInit?: (data: StoreRecord<object>) => void;
   onRecord?: (data: StoreRecord<object>) => void;
 }
@@ -21,6 +20,7 @@ export const emptySession = {
   staging: "",
   getEditorValue: () => "",
   setEditorValue: (() => {}) as (value: string) => void,
+  editorContent: "",
 
   selected: -1,
   history: new History(),
@@ -29,7 +29,6 @@ export const emptySession = {
     id: "",
     name: "",
     setState: () => {},
-    getState: async () => ({}),
   }),
 
   scrollTo: 0,

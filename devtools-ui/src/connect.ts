@@ -17,9 +17,6 @@ export default async function connect(stop: AbortSignal) {
         setState(state) {
           d.state = state;
         },
-        async getState() {
-          return d.state;
-        },
       };
 
       plug(conn);

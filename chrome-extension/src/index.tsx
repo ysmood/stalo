@@ -2,11 +2,9 @@ import ReactDOM from "react-dom/client";
 import { onMessage, sendMessage } from "webext-bridge/devtools";
 import {
   eventConnect,
-  eventGet,
   eventInit,
   eventRecord,
   eventSet,
-  Get,
   Init,
   Record as Rec,
   Set,
@@ -39,10 +37,6 @@ function connect() {
     const conn: Connection = {
       id: data.sessionID,
       name: data.name,
-      getState: async () => {
-        const req: Get = data.sessionID;
-        return await sendMessage(eventGet, req, "window");
-      },
       setState: (state) => {
         const req: Set = { id: data.sessionID, state };
         sendMessage(eventSet, req, "window");

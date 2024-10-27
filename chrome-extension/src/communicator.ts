@@ -2,11 +2,9 @@ import { getDevtools, DEVTOOLS, Devtools } from "stalo/lib/devtools";
 import { initName } from "@stalo/devtools-ui";
 import { sendMessage, setNamespace, onMessage } from "webext-bridge/window";
 import {
-  eventGet,
   eventInit,
   eventRecord,
   eventSet,
-  Get,
   Init,
   namespace,
   Record as Rec,
@@ -34,10 +32,6 @@ async function connectAll() {
   });
 
   setInterval(updateList, 1000);
-
-  onMessage<Get>(eventGet, ({ data }) => {
-    return list[data].state;
-  });
 
   onMessage<Set>(eventSet, ({ data }) => {
     list[data.id].state = data.state;

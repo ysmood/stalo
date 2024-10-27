@@ -18,6 +18,10 @@ export function useSelected() {
 
 export function selectRecord(i: number) {
   setSession((s) => {
+    if (i < 0) {
+      i = s.history.size + i;
+    }
+
     s.selected = i;
     s.staging = format(s.history.get(i).state);
   });

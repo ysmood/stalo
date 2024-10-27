@@ -10,7 +10,11 @@ import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 import { useRef, useEffect } from "react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { useCurrSession } from "./store/session";
-import { setEditorHandlers, useStaging } from "./store/staging";
+import {
+  setEditorContent,
+  setEditorHandlers,
+  useStaging,
+} from "./store/staging";
 import debounce from "debounce";
 
 window.MonacoEnvironment = {
@@ -24,7 +28,7 @@ window.MonacoEnvironment = {
 
 export function MonacoEditor({ className }: { className?: string }) {
   const container = useRef<HTMLDivElement>(null);
-  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+  const modelRef = useRef<monaco.editor.ITextModel | null>(null);
   const value = useStaging();
   const session = useCurrSession();
 
@@ -40,7 +44,7 @@ export function MonacoEditor({ className }: { className?: string }) {
 
     const closeAutoResize = autoResize(editor);
 
-    editorRef.current = editor;
+    modelRef.current = editor.getModel();
 
     return () => {
       closeAutoResize();
@@ -52,17 +56,25 @@ export function MonacoEditor({ className }: { className?: string }) {
     if (session) {
       setEditorHandlers(
         () => {
-          return editorRef.current?.getModel()?.getValue() || "";
+          return modelRef.current?.getValue() || "";
         },
         (val) => {
-          if (editorRef.current) setContent(editorRef.current, val);
+          modelRef.current?.setValue(val);
         }
       );
-    }
 
-    setTimeout(() => {
-      if (editorRef.current) setContent(editorRef.current, value);
-    });
+      const ln = modelRef.current?.onDidChangeContent(() => {
+        setEditorContent(modelRef.current?.getValue() || "");
+      });
+
+      setTimeout(() => {
+        modelRef.current?.setValue(value);
+      });
+
+      return () => {
+        ln?.dispose();
+      };
+    }
   }, [session, value]);
 
   return <div ref={container} className={className}></div>;
@@ -78,22 +90,4 @@ function autoResize(editor: monaco.editor.IStandaloneCodeEditor) {
   return () => {
     window.removeEventListener("resize", ln);
   };
-}
-
-function setContent(
-  editor: monaco.editor.IStandaloneCodeEditor,
-  newValue: string
-) {
-  const model = editor.getModel();
-  if (!model) return;
-
-  const fullRange = model.getFullModelRange();
-
-  // Ensure the editor history is preserved
-  editor.executeEdits("replace-content", [
-    {
-      range: fullRange,
-      text: newValue,
-    },
-  ]);
 }
