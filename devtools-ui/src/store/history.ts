@@ -23,7 +23,7 @@ export function selectRecord(i: number) {
     }
 
     s.selected = i;
-    s.staging = format(s.history.get(i).state);
+    s.staging = s.history.get(i).state;
   });
 }
 
@@ -32,7 +32,7 @@ export function travelTo(i: number) {
     s.selected = i;
     setScrollTo(s, i);
     const state = s.history.get(i).state;
-    s.staging = format(state);
+    s.staging = state;
     s.connection().setState(state);
   });
 }
@@ -43,8 +43,4 @@ export function setScrollTo(s: Session, i: number) {
 
 export function useScrollTo() {
   return useSession((s) => s.scrollTo);
-}
-
-function format(state: object) {
-  return JSON.stringify(state, null, 2);
 }

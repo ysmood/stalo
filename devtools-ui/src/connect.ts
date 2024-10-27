@@ -3,10 +3,10 @@ import { plug, unplug } from "./store";
 import { Connection, initName } from "./store/constants";
 
 export default async function connect(stop: AbortSignal) {
-  const connected = new Set<Devtools<object>>();
+  const connected = new Set<Devtools<unknown>>();
 
   while (!stop.aborted) {
-    getDevtools<object>().forEach((d) => {
+    getDevtools<unknown>().forEach((d) => {
       if (connected.has(d)) return;
 
       connected.add(d);
@@ -15,7 +15,7 @@ export default async function connect(stop: AbortSignal) {
         id: d.id,
         name: d.name,
         setState(state) {
-          d.state = state;
+          d.state = JSON.parse(state);
         },
       };
 
@@ -23,12 +23,15 @@ export default async function connect(stop: AbortSignal) {
 
       conn.onInit?.({
         name: initName,
-        state: d.state,
+        state: encode(d.state),
         createdAt: Date.now(),
       });
 
       const close = d.subscribe((rec) => {
-        conn.onRecord?.(rec);
+        conn.onRecord?.({
+          ...rec,
+          state: encode(rec.state),
+        });
       });
 
       stop.addEventListener("abort", () => {
@@ -42,4 +45,8 @@ export default async function connect(stop: AbortSignal) {
       stop.addEventListener("abort", () => clearTimeout(timer));
     });
   }
+}
+
+function encode(state: unknown) {
+  return JSON.stringify(state, null, 2);
 }

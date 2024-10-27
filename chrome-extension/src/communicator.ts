@@ -34,7 +34,7 @@ async function connectAll() {
   setInterval(updateList, 1000);
 
   onMessage<Set>(eventSet, ({ data }) => {
-    list[data.id].state = data.state;
+    list[data.id].state = JSON.parse(data.state);
   });
 }
 
@@ -44,14 +44,24 @@ function connect(d: Devtools<object>) {
     name: d.name,
     record: {
       name: initName,
-      state: d.state,
+      state: encode(d.state),
       createdAt: Date.now(),
     },
   };
   sendMessage(eventInit, init, "devtools");
 
   d.subscribe((record) => {
-    const req: Rec = { id: d.id, record };
+    const req: Rec = {
+      id: d.id,
+      record: {
+        ...record,
+        state: encode(record.state),
+      },
+    };
     sendMessage(eventRecord, req, "devtools");
   });
+}
+
+function encode(state: object) {
+  return JSON.stringify(state, null, 2);
 }

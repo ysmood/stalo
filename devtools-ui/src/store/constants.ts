@@ -1,4 +1,4 @@
-import { StoreRecord } from "stalo/lib/devtools";
+import type { StoreRecord } from "stalo/lib/devtools";
 import { immutable } from "stalo/lib/utils";
 import History from "./history.class";
 
@@ -8,9 +8,9 @@ export const commitName = "@commit";
 export interface Connection {
   id: string;
   name: string;
-  setState(state: object): void;
-  onInit?: (data: StoreRecord<object>) => void;
-  onRecord?: (data: StoreRecord<object>) => void;
+  setState(state: string): void;
+  onInit?: (data: StoreRecord<string>) => void;
+  onRecord?: (data: StoreRecord<string>) => void;
 }
 
 export const emptySession = {

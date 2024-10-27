@@ -1,7 +1,6 @@
 import { setSession, useSession } from "./session";
 import { commitName } from "./constants";
 import { setScrollTo } from "./history";
-import { deepEqual } from "stalo/lib/utils";
 
 export function useStaging() {
   return useSession((s) => s.staging);
@@ -25,7 +24,7 @@ export function setEditorHandlers(
 
 export function commit() {
   setSession((s) => {
-    const state = JSON.parse(s.getEditorValue());
+    const state = s.getEditorValue();
 
     s.selected = s.history.size;
     setScrollTo(s, s.selected);
@@ -42,16 +41,7 @@ export function commit() {
 }
 
 export function useSameLast() {
-  const val = useSession((s) => s.editorContent);
-  const state = useSession((s) => {
-    return s.history.list.last()?.state;
-  });
-
-  try {
-    return deepEqual(JSON.parse(val), state);
-  } catch {
-    return false;
-  }
+  return useSession((s) => s.editorContent === s.history.list.last()?.state);
 }
 
 export function useSetState() {

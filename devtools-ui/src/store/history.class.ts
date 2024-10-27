@@ -4,10 +4,10 @@ import { StoreRecord } from "stalo/lib/devtools";
 import { uid } from "stalo/lib/utils";
 import { List } from "immutable";
 
-export class StoreRecordX implements StoreRecord<object> {
+export class StoreRecordX implements StoreRecord<string> {
   readonly id = uid();
 
-  constructor(private rec: StoreRecord<object>) {}
+  constructor(private rec: StoreRecord<string>) {}
 
   get state() {
     return this.rec.state;
@@ -46,19 +46,19 @@ export default class History {
   private _filtered = List<number>();
 
   private static emptyRecord = new StoreRecordX({
-    state: {},
+    state: "null",
     name: "",
     description: "",
     createdAt: 0,
   });
 
-  constructor(...records: StoreRecord<object>[]) {
+  constructor(...records: StoreRecord<string>[]) {
     records.forEach((rec) => {
       this.add(rec);
     });
   }
 
-  add(rec: StoreRecord<object>) {
+  add(rec: StoreRecord<string>) {
     const recX = new StoreRecordX(rec);
 
     // Use unshift will make the virtual list super slow.

@@ -1,11 +1,10 @@
 import { create } from "stalo/lib/immer";
-import { enableMapSet, setAutoFreeze } from "immer";
+import { setAutoFreeze } from "immer";
 import { immutable } from "stalo/lib/utils";
 import History from "./history.class";
 import { bufferDelay, Connection, emptySession, initStore } from "./constants";
 import { bufferedCall } from "./utils";
 
-enableMapSet();
 setAutoFreeze(false);
 
 export const [useStore, setStore] = create(initStore);
@@ -24,7 +23,7 @@ export function plug(c: Connection) {
         id,
         name: c.name,
         selected: 0,
-        staging: JSON.stringify(rec.state, null, 2),
+        staging: rec.state,
         history: new History(rec),
         connection: immutable(c),
       };
