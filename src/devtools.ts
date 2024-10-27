@@ -6,17 +6,17 @@ const description = Symbol("description");
 
 export const DEVTOOLS = "__stalo_devtools__";
 
-export type DevtoolsOptions = {
+export interface DevtoolsOptions {
   [name]?: string;
   [description]?: string;
-};
+}
 
-export type StoreRecord<S> = {
+export interface StoreRecord<S> {
   name: string;
   state: S;
   description?: string;
   createdAt: number;
-};
+}
 
 export default function devtools<S>(init: S, devName = ""): Middleware<S> {
   return (set) => {

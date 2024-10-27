@@ -23,7 +23,9 @@ export function createLocalStorage<T>(init: T, key = defaultKey) {
 
 export const saveHistory = Symbol("save-history");
 
-export type URLStorageOptions = { [saveHistory]?: boolean };
+export interface URLStorageOptions {
+  [saveHistory]?: boolean;
+}
 
 export function urlStorage<S>(storage: URLStorage<S>): Middleware<S> {
   return function (set) {
