@@ -2,6 +2,7 @@ import Fuse, { IFuseOptions } from "fuse.js";
 import { immerable } from "immer";
 import { StoreRecord } from "stalo/lib/devtools";
 import { uid } from "stalo/lib/utils";
+import { List } from "immutable";
 
 export class StoreRecordX implements StoreRecord<object> {
   readonly id = uid();
@@ -36,13 +37,13 @@ export default class History {
     useExtendedSearch: true,
   };
 
-  readonly list = [] as StoreRecordX[];
+  private _list = List<StoreRecordX>();
 
   private fuse = new Fuse<StoreRecordX>([], History.fuseOptions);
   private fuseSingle = new Fuse<StoreRecordX>([], History.fuseOptions);
 
   private _filter = "";
-  private _filtered: number[] = [];
+  private _filtered = List<number>();
 
   private static emptyRecord = new StoreRecordX({
     state: {},
@@ -61,22 +62,22 @@ export default class History {
     const recX = new StoreRecordX(rec);
 
     // Use unshift will make the virtual list super slow.
-    this.list.push(recX);
+    this._list = this._list.push(recX);
 
     // Update the fuse index.
     this.fuse.add(recX);
 
     // If the record matches the filter, add it to the filtered list.
     if (this._filter === "") {
-      this._filtered.push(this.list.length - 1);
+      this._filtered = this._filtered.push(this._list.size - 1);
     } else if (this.fuseSingle.search(this._filter).length > 0) {
       this.fuseSingle.removeAt(0);
-      this._filtered.push(this.list.length - 1);
+      this._filtered = this._filtered.push(this._list.size - 1);
     }
   }
 
   get(index: number) {
-    const rec = this.list[index];
+    const rec = this._list.get(index);
     if (!rec) {
       return History.emptyRecord;
     }
@@ -87,10 +88,20 @@ export default class History {
     this._filter = value;
 
     if (value === "") {
-      this._filtered = this.list.map((_, i) => i);
+      this._filtered = this._list.map((_, i) => i);
     } else {
-      this._filtered = this.fuse.search(value).map(({ refIndex }) => refIndex);
+      this._filtered = List(
+        this.fuse.search(value).map(({ refIndex }) => refIndex)
+      );
     }
+  }
+
+  get list() {
+    return this._list;
+  }
+
+  get size() {
+    return this._list.size;
   }
 
   get filter() {

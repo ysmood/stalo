@@ -56,12 +56,12 @@ function Travel() {
         type="range"
         step={1}
         min={0}
-        max={filtered.length - 1}
+        max={filtered.size - 1}
         value={value}
         title="Time travel the state records by dragging the slider"
         onChange={async (e) => {
           const index = parseInt(e.target.value);
-          travelTo(filtered[index]);
+          travelTo(filtered.get(index)!);
         }}
       />
     </div>

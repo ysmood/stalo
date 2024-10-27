@@ -44,8 +44,8 @@ export function Counter({ id, text }: { id: number; text: string }) {
     <div>
       <h3>{text}</h3>
       <Button id={id} n={1} />
-      <Button id={id} n={100} />
       <Button id={id} n={1000} />
+      <Button id={id} n={100000} />
       <div>count: {useList[id]((s) => s.val)}</div>
     </div>
   );

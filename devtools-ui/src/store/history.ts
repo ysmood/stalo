@@ -5,10 +5,6 @@ export function useRecord(i: number) {
   return useSession((s) => s.history.get(i));
 }
 
-export function useRecords() {
-  return useSession((s) => s.history.list);
-}
-
 // diff between a record with the selected record
 export function useTimeDiff(i: number) {
   return useSession((s) => {
@@ -41,8 +37,8 @@ export function setScrollTo(s: Session, i: number) {
   s.scrollTo = i;
 }
 
-export function useTotalRecords() {
-  return useSession((s) => s.history.filtered.length);
+export function useScrollTo() {
+  return useSession((s) => s.scrollTo);
 }
 
 function format(state: object) {

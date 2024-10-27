@@ -9,9 +9,9 @@ import {
   selectRecord,
   setScrollTo,
   useRecord,
+  useScrollTo,
   useSelected,
   useTimeDiff,
-  useTotalRecords,
 } from "./store/history";
 import { setFilter, useFiltered } from "./store/filter";
 import { Button, Name, Title } from "./Components";
@@ -56,7 +56,7 @@ function Footer() {
       <Filter />
       <div className="total">
         <IoDocumentTextOutline size={12} />
-        <span>{useTotalRecords()}</span>
+        <span>{useFiltered().size}</span>
       </div>
       <Button
         onClick={() => {
@@ -67,7 +67,7 @@ function Footer() {
       />
       <Button
         onClick={() => {
-          setSession((s) => setScrollTo(s, s.history.list.length - 1));
+          setSession((s) => setScrollTo(s, s.history.size - 1));
         }}
         icon={<LuArrowDownToLine />}
         title="Scroll to bottom record"
@@ -116,7 +116,7 @@ function Sessions() {
 
 function ItemList() {
   const filtered = useFiltered();
-  const selected = useSelected();
+  const scrollTo = useScrollTo();
 
   return (
     <AutoSizer>
@@ -124,11 +124,11 @@ function ItemList() {
         <List
           width={width}
           height={height}
-          rowCount={filtered.length}
+          rowCount={filtered.size}
           rowHeight={recordHeight}
-          scrollToIndex={selected}
+          scrollToIndex={scrollTo}
           rowRenderer={({ key, index: i, style }) => {
-            return <Item key={key} index={filtered[i]} style={style} />;
+            return <Item key={key} index={filtered.get(i)!} style={style} />;
           }}
         />
       )}

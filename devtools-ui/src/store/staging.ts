@@ -20,7 +20,7 @@ export function commit() {
   setSession((s) => {
     const state = JSON.parse(s.getEditorValue());
 
-    s.selected = s.history.list.length;
+    s.selected = s.history.size;
     setScrollTo(s, s.selected);
 
     s.history.add({
