@@ -1,10 +1,28 @@
 import Fuse, { IFuseOptions } from "fuse.js";
 import { immerable } from "immer";
 import { StoreRecord } from "stalo/lib/devtools";
-import { Immutable, immutable, uid } from "stalo/lib/utils";
+import { uid } from "stalo/lib/utils";
 
-export interface StoreRecordX extends StoreRecord<object> {
-  id: string;
+export class StoreRecordX implements StoreRecord<object> {
+  readonly id = uid();
+
+  constructor(private rec: StoreRecord<object>) {}
+
+  get state() {
+    return this.rec.state;
+  }
+
+  get name() {
+    return this.rec.name;
+  }
+
+  get description() {
+    return this.rec.description;
+  }
+
+  get createdAt() {
+    return this.rec.createdAt;
+  }
 }
 
 export default class History {
@@ -18,7 +36,7 @@ export default class History {
     useExtendedSearch: true,
   };
 
-  readonly list = [] as Immutable<StoreRecordX>[];
+  readonly list = [] as StoreRecordX[];
 
   private fuse = new Fuse<StoreRecordX>([], History.fuseOptions);
   private fuseSingle = new Fuse<StoreRecordX>([], History.fuseOptions);
@@ -26,13 +44,12 @@ export default class History {
   private _filter = "";
   private _filtered: number[] = [];
 
-  private static emptyRecord: StoreRecordX = {
-    id: "",
+  private static emptyRecord = new StoreRecordX({
     state: {},
     name: "",
     description: "",
     createdAt: 0,
-  };
+  });
 
   constructor(...records: StoreRecord<object>[]) {
     records.forEach((rec) => {
@@ -41,13 +58,10 @@ export default class History {
   }
 
   add(rec: StoreRecord<object>) {
-    const recX = {
-      ...rec,
-      id: uid(),
-    };
+    const recX = new StoreRecordX(rec);
 
     // Use unshift will make the virtual list super slow.
-    this.list.push(immutable(recX));
+    this.list.push(recX);
 
     // Update the fuse index.
     this.fuse.add(recX);
@@ -66,7 +80,7 @@ export default class History {
     if (!rec) {
       return History.emptyRecord;
     }
-    return rec();
+    return rec;
   }
 
   set filter(value: string) {

@@ -32,7 +32,7 @@ export const emptySession = {
     getState: async () => ({}),
   }),
 
-  recordScroll: 0,
+  scrollTo: 0,
 };
 
 export type Session = typeof emptySession;

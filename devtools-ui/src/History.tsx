@@ -1,13 +1,17 @@
 import { css, cx } from "@emotion/css";
-import { useCurrSession, useSessions, selectSession } from "./store/session";
+import {
+  useCurrSession,
+  useSessions,
+  selectSession,
+  setSession,
+} from "./store/session";
 import {
   selectRecord,
+  setScrollTo,
   useRecord,
   useSelected,
   useTimeDiff,
   useTotalRecords,
-  useRecordScroll,
-  setRecordScroll,
 } from "./store/history";
 import { setFilter, useFiltered } from "./store/filter";
 import { Button, Name, Title } from "./Components";
@@ -56,14 +60,14 @@ function Footer() {
       </div>
       <Button
         onClick={() => {
-          setRecordScroll(0);
+          setSession((s) => setScrollTo(s, 0));
         }}
         icon={<LuArrowUpToLine />}
         title="Scroll to top record"
       />
       <Button
         onClick={() => {
-          setRecordScroll(Infinity);
+          setSession((s) => setScrollTo(s, s.history.list.length - 1));
         }}
         icon={<LuArrowDownToLine />}
         title="Scroll to bottom record"
@@ -111,8 +115,8 @@ function Sessions() {
 }
 
 function ItemList() {
-  const scroll = useRecordScroll();
   const filtered = useFiltered();
+  const selected = useSelected();
 
   return (
     <AutoSizer>
@@ -122,12 +126,9 @@ function ItemList() {
           height={height}
           rowCount={filtered.length}
           rowHeight={recordHeight}
+          scrollToIndex={selected}
           rowRenderer={({ key, index: i, style }) => {
             return <Item key={key} index={filtered[i]} style={style} />;
-          }}
-          scrollTop={scroll}
-          onScroll={({ scrollTop }) => {
-            setRecordScroll(scrollTop);
           }}
         />
       )}

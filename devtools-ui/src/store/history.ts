@@ -1,5 +1,5 @@
+import { Session } from "./constants";
 import { setSession, useSession } from "./session";
-import { recordHeight } from "./constants";
 
 export function useRecord(i: number) {
   return useSession((s) => s.history.get(i));
@@ -30,25 +30,15 @@ export function selectRecord(i: number) {
 export function travelTo(i: number) {
   setSession((s) => {
     s.selected = i;
+    setScrollTo(s, i);
     const state = s.history.get(i).state;
     s.staging = format(state);
     s.connection().setState(state);
   });
 }
 
-export function useRecordScroll() {
-  return useSession((s) => s.recordScroll);
-}
-
-export function setRecordScroll(index: number) {
-  setSession((s) => {
-    if (index === Infinity) {
-      s.recordScroll = (s.history.list.length - 1) * recordHeight;
-      return;
-    }
-
-    s.recordScroll = index;
-  });
+export function setScrollTo(s: Session, i: number) {
+  s.scrollTo = i;
 }
 
 export function useTotalRecords() {
