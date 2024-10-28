@@ -12,6 +12,7 @@
   "publishConfig": {
     "provenance": true
   },
+  "main": "./lib/index.js",
   "exports": {
     ".": "./lib/index.js",
     "./lib/constants": "./lib/constants.js"
