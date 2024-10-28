@@ -3,7 +3,7 @@ import { css } from "@emotion/css";
 import Staging from "./Staging";
 import History from "./History";
 import { CurrentRecord } from "./CurrentRecord";
-import connect from "./connect";
+import connect from "./store/connect";
 import { useEffect } from "react";
 
 export default function Panel({
