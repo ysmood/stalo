@@ -38,7 +38,14 @@ export default function App() {
 
 Check the [Counter](./examples/Counter.tsx) for basic usage, or try it [online](https://codesandbox.io/p/sandbox/jtfywj).
 
-Check the [CounterPersistent](./examples/CounterPersistent.tsx), [MonolithStore](./examples/MonolithStore), [TodoApp](./examples/TodoApp), [Devtools](./examples/Devtools.tsx) for more advanced usage.
+More advanced examples:
+
+- [CounterPersistent](./examples/CounterPersistent.tsx)
+- [MonolithStore](./examples/MonolithStore)
+- [TodoApp](./examples/TodoApp)
+- [Devtools](./examples/Devtools.tsx)
+
+All the examples can be viewed [online](https://stalo-examples.vercel.app).
 
 ## FAQ
 

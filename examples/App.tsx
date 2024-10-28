@@ -2,13 +2,15 @@ import "./index.css";
 import { Link, Switch, Router, Route } from "wouter";
 import { lazy, Suspense } from "react";
 
-const examples = [
-  "Counter",
-  "CounterPersistent",
-  "MonolithStore",
-  "TodoApp",
-  "Devtools",
-];
+type Import = () => Promise<{ default: React.ComponentType<unknown> }>;
+
+const examples: { [key: string]: Import } = {
+  Counter: () => import("./Counter"),
+  CounterPersistent: () => import("./CounterPersistent"),
+  MonolithStore: () => import("./MonolithStore"),
+  TodoApp: () => import("./TodoApp"),
+  Devtools: () => import("./Devtools"),
+};
 
 export default function App() {
   return (
@@ -16,10 +18,10 @@ export default function App() {
       <Navbar />
 
       <Switch>
-        <ExampleRoute path="/" name={examples[0]} />
+        <ExampleRoute path="/" im={examples.Counter} />
         <Router base="/examples">
-          {examples.map((n) => (
-            <ExampleRoute key={n} name={n} />
+          {Object.keys(examples).map((name) => (
+            <ExampleRoute key={name} path={`/${name}`} im={examples[name]} />
           ))}
         </Router>
       </Switch>
@@ -30,7 +32,7 @@ export default function App() {
 function Navbar() {
   return (
     <>
-      {examples.map((name) => {
+      {Object.keys(examples).map((name) => {
         return (
           <Link href={`/examples/${name}`} key={name} className={"mx-1"}>
             {name}
@@ -41,9 +43,8 @@ function Navbar() {
   );
 }
 
-function ExampleRoute({ name, path }: { name: string; path?: string }) {
-  path = path || `/${name}`;
-  const Example = lazy(() => import(/* @vite-ignore */ `./${name}`));
+function ExampleRoute({ path, im }: { path: string; im: Import }) {
+  const Example = lazy(im);
   return (
     <Route path={path}>
       <Suspense fallback={<div>Loading...</div>}>
