@@ -1,4 +1,4 @@
-import { getDevtools, DEVTOOLS, Devtools } from "stalo/lib/devtools";
+import { getDevtools, DEVTOOLS, Devtools, encode } from "stalo/lib/devtools";
 import { initName } from "@stalo/devtools-ui";
 import { sendMessage, setNamespace, onMessage } from "webext-bridge/window";
 import {
@@ -55,13 +55,9 @@ function connect(d: Devtools<object>) {
       id: d.id,
       record: {
         ...record,
-        state: encode(record.state),
+        state: record.patch ? undefined : encode(record.state),
       },
     };
     sendMessage(eventRecord, req, "devtools");
   });
-}
-
-function encode(state: object) {
-  return JSON.stringify(state, null, 2);
 }

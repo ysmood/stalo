@@ -1,4 +1,4 @@
-import { Devtools, getDevtools } from "stalo/lib/devtools";
+import { Devtools, getDevtools, encode } from "stalo/lib/devtools";
 import { plug, unplug } from ".";
 import { Connection, initName } from "./constants";
 
@@ -30,7 +30,7 @@ export default async function connect(stop: AbortSignal) {
       const close = d.subscribe((rec) => {
         conn.onRecord?.({
           ...rec,
-          state: encode(rec.state),
+          state: rec.patch ? undefined : encode(rec.state),
         });
       });
 
@@ -45,8 +45,4 @@ export default async function connect(stop: AbortSignal) {
       stop.addEventListener("abort", () => clearTimeout(timer));
     });
   }
-}
-
-function encode(state: unknown) {
-  return JSON.stringify(state, null, 2);
 }

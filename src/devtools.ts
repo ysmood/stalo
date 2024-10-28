@@ -1,62 +1,74 @@
-import { produce, SetStore } from ".";
+import { enablePatches, Patch, produceWithPatches } from "immer";
+import { pipeline, produce, SetStore } from ".";
 import { isString, uid, type Middleware } from "./utils";
 
 const name = Symbol("action-name");
 const description = Symbol("description");
+const patch = Symbol("patch");
 
 export const DEVTOOLS = "__stalo_devtools__";
 
-export interface DevtoolsOptions {
+export interface DevtoolsContext {
   [name]?: string;
   [description]?: string;
+  [patch]?: Patch[];
 }
 
 export interface StoreRecord<S> {
   name: string;
-  state: S;
   description?: string;
   createdAt: number;
+
+  state: S;
+  patch?: Patch[];
 }
 
 export default function devtools<S>(init: S, devName = ""): Middleware<S> {
   return (set) => {
-    const subscribers = new Set<Subscriber<S>>();
+    const [subscribe, publish] = pipeline<Parameters<Subscriber<S>>>();
 
-    addToGlobal(new Devtools(devName, init, set, subscribers));
+    new Devtools(devName, init, set, subscribe);
 
-    return (ns, options?: DevtoolsOptions) => {
+    return (ns, ctx?: DevtoolsContext) => {
+      let curr: S;
+
       set((prev) => {
-        const curr = produce(prev, ns);
-
-        const rec: StoreRecord<S> = {
-          state: curr,
-          name: options?.[name] || "",
-          description: options?.[description],
-          createdAt: Date.now(),
-        };
-
-        subscribers.forEach((s) => s(rec));
-
+        curr = produce(prev, ns);
         return curr;
-      }, options);
+      }, ctx);
+
+      const rec: StoreRecord<S> = {
+        state: curr!,
+        patch: ctx?.[patch],
+        name: ctx?.[name] || "",
+        description: ctx?.[description],
+        createdAt: Date.now(),
+      };
+
+      publish(rec);
     };
   };
 }
+
+type DevtoolsList<S> = Set<Devtools<S>>;
 
 function addToGlobal<S>(dt: Devtools<S>) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const win = window as any;
 
-  if (!win[DEVTOOLS]) {
-    win[DEVTOOLS] = [];
+  let list: DevtoolsList<S> = win[DEVTOOLS];
+
+  if (!list) {
+    list = new Set();
+    win[DEVTOOLS] = list;
   }
 
-  win[DEVTOOLS].push(dt);
+  list.add(dt);
 
   window.dispatchEvent(new CustomEvent(DEVTOOLS));
 }
 
-export function getDevtools<S>(): Devtools<S>[] {
+export function getDevtools<S>(): DevtoolsList<S> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (window as any)[DEVTOOLS] || [];
 }
@@ -65,26 +77,22 @@ type Subscriber<S> = (record: StoreRecord<S>) => void;
 
 export class Devtools<S> {
   private current: S;
+  private closeSubscriber: () => void;
 
   constructor(
     readonly name: string,
     init: S,
     private set: SetStore<S>,
-    private subscribers: Set<Subscriber<S>>,
+    readonly subscribe: (s: Subscriber<S>) => () => void,
     readonly id = uid()
   ) {
     this.current = init;
-    this.subscribe(({ state }) => {
+
+    this.closeSubscriber = this.subscribe(({ state }) => {
       this.current = state;
     });
-  }
 
-  subscribe(cb: (record: StoreRecord<S>) => void) {
-    this.subscribers.add(cb);
-
-    return () => {
-      this.subscribers.delete(cb);
-    };
+    addToGlobal(this);
   }
 
   /**
@@ -101,10 +109,22 @@ export class Devtools<S> {
   get state() {
     return this.current;
   }
+
+  close() {
+    this.closeSubscriber();
+    getDevtools<S>().delete(this);
+  }
 }
 
 /**
- * A shortcut to create a devtools option.
+ * Encode state to wire format.
+ */
+export function encode<S>(state: S) {
+  return JSON.stringify(state, null, 2);
+}
+
+/**
+ * Creates a devtools context with meta info.
  * @param action A identifier for the action, better to be unique and easy to filter.
  * It's recommended to use the function as the action.
  * @param actionDescription A description for the action to help you understand what's going on.
@@ -112,9 +132,43 @@ export class Devtools<S> {
 export function meta(
   action: string | { name: string },
   actionDescription?: string
-): DevtoolsOptions {
+): DevtoolsContext {
   return {
     [name]: isString(action) ? action : action.name,
     [description]: actionDescription,
+  };
+}
+
+/**
+ * Sets the patch to the context.
+ * When it's set, the state record will also carry a diff patch.
+ * The middleware before the devtools middleware is responsible for providing the patch.
+ * @param ctx The middleware context.
+ * @param p The patch to be set.
+ */
+export function setPatch(ctx: object, p: Patch[]) {
+  (ctx as DevtoolsContext)[patch] = p;
+}
+
+/**
+ * Returns a middleware that uses immer to produce the next state and also provides the patch.
+ */
+export function immerWithPatch<S>(): Middleware<S> {
+  enablePatches();
+
+  return (set) => (ns, ctx) => {
+    if (!ctx) {
+      ctx = {};
+    }
+
+    set((s) => {
+      const [newState, patch] = produceWithPatches(s, (draft: S) =>
+        produce(draft, ns)
+      );
+
+      setPatch(ctx, patch);
+
+      return newState;
+    }, ctx);
   };
 }

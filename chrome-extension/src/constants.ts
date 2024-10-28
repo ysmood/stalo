@@ -6,7 +6,7 @@ export const eventSet = "@@stalo-set";
 
 type StoreRecord = {
   name: string;
-  state: string;
+  state: string | undefined;
   description?: string;
   createdAt: number;
 };

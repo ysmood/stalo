@@ -10,7 +10,7 @@ export interface Connection {
   name: string;
   setState(state: string): void;
   onInit?: (data: StoreRecord<string>) => void;
-  onRecord?: (data: StoreRecord<string>) => void;
+  onRecord?: (data: StoreRecord<string | undefined>) => void;
 }
 
 export const emptySession = {

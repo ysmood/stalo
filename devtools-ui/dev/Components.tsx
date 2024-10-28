@@ -1,7 +1,7 @@
 import create, { SetStore, UseStore } from "stalo";
 import Panel from "../src/Panel";
 import { compose } from "stalo/lib/utils";
-import devtools, { meta } from "stalo/lib/devtools";
+import devtools, { immerWithPatch, meta } from "stalo/lib/devtools";
 import immer from "stalo/lib/immer";
 
 type Store = {
@@ -13,6 +13,7 @@ const setList: SetStore<Store>[] = [];
 
 createStore("x", 1);
 createStore("y", 2);
+createStore("z", 3, true);
 
 export function App() {
   return (
@@ -24,6 +25,7 @@ export function App() {
       <div style={{ width: 200, margin: 30 }}>
         <Counter id={0} text="X" />
         <Counter id={1} text="Y" />
+        <Counter id={2} text="Z" />
       </div>
       <div
         style={{
@@ -51,11 +53,13 @@ export function Counter({ id, text }: { id: number; text: string }) {
   );
 }
 
-function createStore(name: string, val: number) {
+function createStore(name: string, val: number, patch = false) {
   const init = { val: val };
   const [use, baseSet] = create(init);
 
-  const set = compose(baseSet, immer, devtools(init, name));
+  const immerM = patch ? immerWithPatch<Store>() : immer;
+
+  const set = compose(baseSet, immerM, devtools(init, name));
 
   useList.push(use);
   setList.push(set);

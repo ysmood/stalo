@@ -26,7 +26,7 @@ export function useEqual<S, R>(
 }
 
 /**
- * A middleware to update the state with options.
+ * A middleware to update the state with context.
  */
 export type Middleware<S> = (set: SetStore<S>) => SetStore<S>;
 

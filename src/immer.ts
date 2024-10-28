@@ -11,6 +11,6 @@ export function create<S>(init: S) {
 }
 
 export default function immer<S>(set: SetStore<S>) {
-  return (ns: NextState<S>, opts?: object) =>
-    set((s) => ImmerProduce(s, (draft: S) => produce(draft, ns)), opts);
+  return (ns: NextState<S>, ctx?: object) =>
+    set((s) => ImmerProduce(s, (draft: S) => produce(draft, ns)), ctx);
 }

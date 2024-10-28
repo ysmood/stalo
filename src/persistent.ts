@@ -23,29 +23,29 @@ export function createLocalStorage<T>(init: T, key = defaultKey) {
 
 export const saveHistory = Symbol("save-history");
 
-export interface URLStorageOptions {
+export interface URLStorageContext {
   [saveHistory]?: boolean;
 }
 
 export function urlStorage<S>(storage: URLStorage<S>): Middleware<S> {
   return function (set) {
-    return (ns, opts?: URLStorageOptions) => {
+    return (ns, ctx?: URLStorageContext) => {
       set((state) => {
         const s = produce(state, ns);
-        storage.set(s, opts?.[saveHistory]);
+        storage.set(s, ctx?.[saveHistory]);
         return s;
-      }, opts);
+      }, ctx);
     };
   };
 }
 
 export function localStorage<S>(storage: LocalStorage<S>): Middleware<S> {
   return function (set) {
-    return (ns, opts) => {
+    return (ns, ctx) => {
       set((state) => {
         storage.set(state);
         return produce(state, ns);
-      }, opts);
+      }, ctx);
     };
   };
 }

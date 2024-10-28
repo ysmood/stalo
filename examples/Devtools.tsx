@@ -5,11 +5,11 @@ import { Panel } from "@stalo/devtools-ui";
 
 const initStore = 0;
 
-const [useCount, baseSetCount] = create(initStore);
+const [useCount, _set] = create(initStore);
 
 // Install the devtools middleware as the last middleware.
 // You can leave it out in production, no overhead.
-const setCount = compose(baseSetCount, devtools(initStore, "Demo"));
+const setCount = compose(_set, devtools(initStore, "Demo"));
 
 function increase(n: number) {
   // The info here is optional, but it's useful for debugging.

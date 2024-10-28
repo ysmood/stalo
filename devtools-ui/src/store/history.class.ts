@@ -1,16 +1,35 @@
-import Fuse, { IFuseOptions } from "fuse.js";
-import { immerable } from "immer";
-import { StoreRecord } from "stalo/lib/devtools";
+import Fuse, { type IFuseOptions } from "fuse.js";
+import { applyPatches, immerable } from "immer";
+import { type StoreRecord, encode } from "stalo/lib/devtools";
 import { uid } from "stalo/lib/utils";
 import { List } from "immutable";
 
 export class StoreRecordX implements StoreRecord<string> {
   readonly id = uid();
 
-  constructor(private rec: StoreRecord<string>) {}
+  private parsedCache: unknown | undefined;
+  private stringCache: string | undefined;
 
-  get state() {
-    return this.rec.state;
+  constructor(
+    private rec: StoreRecord<string | undefined>,
+    private last?: StoreRecordX
+  ) {}
+
+  get state(): string {
+    if (this.rec.state !== undefined) return this.rec.state;
+    if (this.stringCache !== undefined) return this.stringCache;
+
+    const last = this.last!;
+
+    const lastState =
+      last.parsedCache === undefined
+        ? JSON.parse(last.state)
+        : last.parsedCache;
+
+    this.parsedCache = applyPatches(lastState, this.rec.patch!);
+    this.stringCache = encode(this.parsedCache);
+
+    return this.stringCache;
   }
 
   get name() {
@@ -58,8 +77,8 @@ export default class History {
     });
   }
 
-  add(rec: StoreRecord<string>) {
-    const recX = new StoreRecordX(rec);
+  add(rec: StoreRecord<string | undefined>) {
+    const recX = new StoreRecordX(rec, this._list.last());
 
     // Use unshift will make the virtual list super slow.
     this._list = this._list.push(recX);
