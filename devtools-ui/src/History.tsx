@@ -21,6 +21,7 @@ import { createRef, useEffect, useState } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { LuDatabase } from "react-icons/lu";
 import { IoDocumentTextOutline } from "react-icons/io5";
+import debounce from "debounce";
 
 export default function History() {
   return (
@@ -121,9 +122,11 @@ function ItemList() {
   useEffect(() => {
     if (ref.current) {
       const list = ref.current;
-      setScrollToHandler((i) => {
-        list.scrollToItem(i, "center");
-      });
+      setScrollToHandler(
+        debounce((i) => {
+          list.scrollToItem(i, "center");
+        }, 100)
+      );
 
       return () => {
         setScrollToHandler(() => {});
