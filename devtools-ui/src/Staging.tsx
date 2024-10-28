@@ -106,9 +106,4 @@ const style = css({
       },
     },
   },
-
-  ".editor": {
-    height: "100%",
-    boxShadow: "0 0 5px #1e1e1e",
-  },
 });

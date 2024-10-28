@@ -9,5 +9,5 @@
     "strict": true,
     "noEmit": true
   },
-  "include": ["vite.config.ts", "./react-virtualized-patch.ts"]
+  "include": ["vite.config.ts"]
 }

@@ -2,9 +2,6 @@ import type { StoreRecord } from "stalo/lib/devtools";
 import { immutable } from "stalo/lib/utils";
 import History from "./history.class";
 
-export const initName = "@init";
-export const commitName = "@commit";
-
 export interface Connection {
   id: string;
   name: string;

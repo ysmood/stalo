@@ -1,6 +1,7 @@
 import { Devtools, getDevtools, encode } from "stalo/lib/devtools";
 import { plug, unplug } from ".";
-import { Connection, initName } from "./constants";
+import { Connection } from "./constants";
+import { initName } from "../constants";
 
 export default async function connect(stop: AbortSignal) {
   const connected = new Set<Devtools<unknown>>();

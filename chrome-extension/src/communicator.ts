@@ -1,5 +1,5 @@
 import { getDevtools, DEVTOOLS, Devtools, encode } from "stalo/lib/devtools";
-import { initName } from "@stalo/devtools-ui";
+import { initName } from "@stalo/devtools-ui/lib/constants";
 import { sendMessage, setNamespace, onMessage } from "webext-bridge/window";
 import {
   eventInit,

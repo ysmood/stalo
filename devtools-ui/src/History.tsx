@@ -15,10 +15,11 @@ import {
 } from "./store/history";
 import { setFilter, useFiltered } from "./store/filter";
 import { Button, Name, Title } from "./Components";
-import { List, AutoSizer } from "react-virtualized";
+import { FixedSizeList as List } from "react-window";
 import { recordHeight } from "./store/constants";
 import { LuArrowUpToLine, LuArrowDownToLine } from "react-icons/lu";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import AutoSizer from "react-virtualized-auto-sizer";
 import { LuDatabase } from "react-icons/lu";
 import { IoDocumentTextOutline } from "react-icons/io5";
 
@@ -117,20 +118,26 @@ function Sessions() {
 function ItemList() {
   const filtered = useFiltered();
   const scrollTo = useScrollTo();
+  const ref = useRef<List>(null);
+
+  useEffect(() => {
+    ref.current?.scrollToItem(scrollTo, "center");
+  }, [scrollTo]);
 
   return (
     <AutoSizer>
       {({ height, width }) => (
         <List
+          ref={ref}
           width={width}
           height={height}
-          rowCount={filtered.size}
-          rowHeight={recordHeight}
-          scrollToIndex={scrollTo}
-          rowRenderer={({ key, index: i, style }) => {
-            return <Item key={key} index={filtered.get(i)!} style={style} />;
+          itemCount={filtered.size}
+          itemSize={recordHeight}
+        >
+          {({ index: i, style }) => {
+            return <Item index={filtered.get(i)!} style={style} />;
           }}
-        />
+        </List>
       )}
     </AutoSizer>
   );
@@ -250,10 +257,6 @@ const style = css({
     },
 
     boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
-  },
-
-  ".records": {
-    overflowY: "scroll",
   },
 
   ".title": {

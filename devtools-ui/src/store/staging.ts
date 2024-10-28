@@ -1,6 +1,6 @@
 import { setSession, useSession } from "./session";
-import { commitName } from "./constants";
 import { setScrollTo } from "./history";
+import { commitName } from "../constants";
 
 export function useStaging() {
   return useSession((s) => s.staging);

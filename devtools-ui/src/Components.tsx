@@ -1,5 +1,5 @@
 import { css, cx } from "@emotion/css";
-import { commitName, initName } from "./store/constants";
+import { commitName, initName } from "./constants";
 
 export function Button({
   icon,
