@@ -28,7 +28,7 @@ export const emptySession = {
     setState: () => {},
   }),
 
-  scrollTo: 0,
+  scrollTo: (() => {}) as (index: number) => void,
 };
 
 export type Session = typeof emptySession;

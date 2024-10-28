@@ -1,5 +1,14 @@
+import "monaco-editor";
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+
 import { useRef, useEffect } from "react";
-import * as monaco from "monaco-editor";
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import { useCurrSession } from "./store/session";
 import {
   setEditorContent,
@@ -7,6 +16,15 @@ import {
   useStaging,
 } from "./store/staging";
 import debounce from "debounce";
+
+window.MonacoEnvironment = {
+  getWorker(_, label: string) {
+    if (label === "json") {
+      return new jsonWorker();
+    }
+    return new editorWorker();
+  },
+};
 
 export function MonacoEditor({ className }: { className?: string }) {
   const container = useRef<HTMLDivElement>(null);
@@ -32,7 +50,7 @@ export function MonacoEditor({ className }: { className?: string }) {
       closeAutoResize();
       editor.dispose();
     };
-  }, [container]);
+  }, []);
 
   useEffect(() => {
     if (session) {

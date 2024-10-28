@@ -1,5 +1,4 @@
 import { setSession, useSession } from "./session";
-import { setScrollTo } from "./history";
 import { commitName } from "../constants";
 
 export function useStaging() {
@@ -27,7 +26,7 @@ export function commit() {
     const state = s.getEditorValue();
 
     s.selected = s.history.size;
-    setScrollTo(s, s.selected);
+    s.scrollTo(s.selected);
 
     s.history.add({
       state,

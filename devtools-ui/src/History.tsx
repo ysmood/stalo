@@ -7,9 +7,8 @@ import {
 } from "./store/session";
 import {
   selectRecord,
-  setScrollTo,
+  setScrollToHandler,
   useRecord,
-  useScrollTo,
   useSelected,
   useTimeDiff,
 } from "./store/history";
@@ -18,7 +17,7 @@ import { Button, Name, Title } from "./Components";
 import { FixedSizeList as List } from "react-window";
 import { recordHeight } from "./store/constants";
 import { LuArrowUpToLine, LuArrowDownToLine } from "react-icons/lu";
-import { useEffect, useRef, useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { LuDatabase } from "react-icons/lu";
 import { IoDocumentTextOutline } from "react-icons/io5";
@@ -61,14 +60,14 @@ function Footer() {
       </div>
       <Button
         onClick={() => {
-          setSession((s) => setScrollTo(s, 0));
+          setSession((s) => s.scrollTo(0));
         }}
         icon={<LuArrowUpToLine />}
         title="Scroll to top record"
       />
       <Button
         onClick={() => {
-          setSession((s) => setScrollTo(s, s.history.size - 1));
+          setSession((s) => s.scrollTo(s.history.size - 1));
         }}
         icon={<LuArrowDownToLine />}
         title="Scroll to bottom record"
@@ -117,12 +116,20 @@ function Sessions() {
 
 function ItemList() {
   const filtered = useFiltered();
-  const scrollTo = useScrollTo();
-  const ref = useRef<List>(null);
+  const ref = createRef<List>();
 
   useEffect(() => {
-    ref.current?.scrollToItem(scrollTo, "center");
-  }, [scrollTo]);
+    if (ref.current) {
+      const list = ref.current;
+      setScrollToHandler((i) => {
+        list.scrollToItem(i, "center");
+      });
+
+      return () => {
+        setScrollToHandler(() => {});
+      };
+    }
+  }, [ref]);
 
   return (
     <AutoSizer>

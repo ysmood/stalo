@@ -1,4 +1,3 @@
-import { Session } from "./constants";
 import { setSession, useSession } from "./session";
 
 export function useRecord(i: number) {
@@ -30,17 +29,15 @@ export function selectRecord(i: number) {
 export function travelTo(i: number) {
   setSession((s) => {
     s.selected = i;
-    setScrollTo(s, i);
+    s.scrollTo(i);
     const state = s.history.get(i).state;
     s.staging = state;
     s.connection().setState(state);
   });
 }
 
-export function setScrollTo(s: Session, i: number) {
-  s.scrollTo = i;
-}
-
-export function useScrollTo() {
-  return useSession((s) => s.scrollTo);
+export function setScrollToHandler(handler: (i: number) => void) {
+  setSession((s) => {
+    s.scrollTo = handler;
+  });
 }
