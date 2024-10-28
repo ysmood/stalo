@@ -47,7 +47,7 @@ function ExampleRoute({ path, im }: { path: string; im: Import }) {
   const Example = lazy(im);
   return (
     <Route path={path}>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<h2>Loading...</h2>}>
         <Example />
       </Suspense>
     </Route>

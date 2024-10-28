@@ -7,12 +7,19 @@ import { LuCheck, LuUndoDot } from "react-icons/lu";
 import { VscSymbolNamespace } from "react-icons/vsc";
 import { useFiltered } from "./store/filter";
 import Slider from "./Slider";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 export default function Staging() {
   return (
     <div className={style}>
       <Toolbar />
-      <MonacoEditor className="editor" />
+      <div>
+        <AutoSizer>
+          {({ width, height }) => (
+            <MonacoEditor className="editor" width={width} height={height} />
+          )}
+        </AutoSizer>
+      </div>
     </div>
   );
 }

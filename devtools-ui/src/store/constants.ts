@@ -1,5 +1,4 @@
 import type { StoreRecord } from "stalo/lib/devtools";
-import { immutable } from "stalo/lib/utils";
 import History from "./history.class";
 
 export interface Connection {
@@ -10,9 +9,17 @@ export interface Connection {
   onRecord?: (data: StoreRecord<string | undefined>) => void;
 }
 
+export const connections: { [key: string]: Connection } = {
+  "": {
+    id: "",
+    name: "",
+    setState: () => {},
+  },
+};
+
 export const emptySession = {
-  id: "",
-  name: "none",
+  id: "", // connection id
+  name: "none", // connection name
 
   staging: "",
   getEditorValue: () => "",
@@ -22,13 +29,7 @@ export const emptySession = {
   selected: -1,
   history: new History(),
 
-  connection: immutable<Connection>({
-    id: "",
-    name: "",
-    setState: () => {},
-  }),
-
-  scrollTo: (() => {}) as (index: number) => void,
+  scrollTo: { val: 0 },
 };
 
 export type Session = typeof emptySession;

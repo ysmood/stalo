@@ -1,5 +1,6 @@
 import { setSession, useSession } from "./session";
 import { commitName } from "../constants";
+import { setScrollTo, setState } from "./history";
 
 export function useStaging() {
   return useSession((s) => s.staging);
@@ -26,7 +27,8 @@ export function commit() {
     const state = s.getEditorValue();
 
     s.selected = s.history.size;
-    s.scrollTo(s.selected);
+
+    setScrollTo(s, s.selected);
 
     s.history.add({
       state,
@@ -35,16 +37,12 @@ export function commit() {
       createdAt: Date.now(),
     });
 
-    s.connection().setState(state);
+    setState(s, state);
   });
 }
 
 export function useSameLast() {
   return useSession((s) => s.editorContent === s.history.list.last()?.state);
-}
-
-export function useSetState() {
-  return useSession((s) => s.connection().setState);
 }
 
 export function useEditorValue() {

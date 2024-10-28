@@ -15,7 +15,6 @@ import {
   setEditorHandlers,
   useStaging,
 } from "./store/staging";
-import debounce from "debounce";
 
 window.MonacoEnvironment = {
   getWorker(_, label: string) {
@@ -26,9 +25,18 @@ window.MonacoEnvironment = {
   },
 };
 
-export function MonacoEditor({ className }: { className?: string }) {
+export function MonacoEditor({
+  className,
+  width,
+  height,
+}: {
+  className?: string;
+  width: number;
+  height: number;
+}) {
   const container = useRef<HTMLDivElement>(null);
-  const modelRef = useRef<monaco.editor.ITextModel | null>(null);
+  const resizeRef = useRef<(d: { width: number; height: number }) => void>();
+  const modelRef = useRef<monaco.editor.ITextModel | null>();
   const value = useStaging();
   const session = useCurrSession();
 
@@ -42,12 +50,11 @@ export function MonacoEditor({ className }: { className?: string }) {
       quickSuggestions: true,
     });
 
-    const closeAutoResize = autoResize(editor);
-
     modelRef.current = editor.getModel();
 
+    resizeRef.current = editor.layout.bind(editor);
+
     return () => {
-      closeAutoResize();
       editor.dispose();
     };
   }, []);
@@ -77,17 +84,9 @@ export function MonacoEditor({ className }: { className?: string }) {
     }
   }, [session, value]);
 
+  useEffect(() => {
+    resizeRef.current?.({ width, height });
+  }, [width, height]);
+
   return <div ref={container} className={className}></div>;
-}
-
-function autoResize(editor: monaco.editor.IStandaloneCodeEditor) {
-  const ln = debounce(() => {
-    editor.layout({ height: 0, width: 0 });
-    editor.layout();
-  }, 300);
-  window.addEventListener("resize", ln);
-
-  return () => {
-    window.removeEventListener("resize", ln);
-  };
 }

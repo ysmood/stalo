@@ -1,4 +1,5 @@
 import { setSession, useSession } from "./session";
+import { connections, Session } from "./constants";
 
 export function useRecord(i: number) {
   return useSession((s) => s.history.get(i));
@@ -29,15 +30,33 @@ export function selectRecord(i: number) {
 export function travelTo(i: number) {
   setSession((s) => {
     s.selected = i;
-    s.scrollTo(i);
+    setScrollTo(s, i);
     const state = s.history.get(i).state;
     s.staging = state;
-    s.connection().setState(state);
+    setState(s, state);
   });
 }
 
-export function setScrollToHandler(handler: (i: number) => void) {
+export function setState(s: Session, state: string) {
+  connections[s.id].setState(state);
+}
+
+export function scrollToTop() {
   setSession((s) => {
-    s.scrollTo = handler;
+    setScrollTo(s, 0);
   });
+}
+
+export function scrollToBottom() {
+  setSession((s) => {
+    setScrollTo(s, s.history.size - 1);
+  });
+}
+
+export function useScrollTo() {
+  return useSession((s) => s.scrollTo);
+}
+
+export function setScrollTo(s: Session, i: number) {
+  s.scrollTo = { val: i };
 }

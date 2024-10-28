@@ -1,5 +1,5 @@
 import { setSession, useSession } from "./session";
-import debounce from "debounce";
+import { debounce } from "./utils";
 
 export function useFilter() {
   return useSession((s) => s.history.filter);

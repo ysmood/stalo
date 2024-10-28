@@ -1,8 +1,13 @@
 import { create } from "stalo/lib/immer";
 import { enablePatches, setAutoFreeze } from "immer";
-import { immutable } from "stalo/lib/utils";
 import History from "./history.class";
-import { bufferDelay, Connection, emptySession, initStore } from "./constants";
+import {
+  bufferDelay,
+  Connection,
+  connections,
+  emptySession,
+  initStore,
+} from "./constants";
 import { bufferedCall } from "./utils";
 
 setAutoFreeze(false);
@@ -12,6 +17,8 @@ export const [useStore, setStore] = create(initStore);
 
 export function plug(c: Connection) {
   const id = c.id;
+
+  connections[id] = c;
 
   c.onInit = (rec) => {
     rec.description = "Initial state when the session was started";
@@ -26,7 +33,6 @@ export function plug(c: Connection) {
         selected: 0,
         staging: rec.state,
         history: new History(rec),
-        connection: immutable(c),
       };
     });
   };

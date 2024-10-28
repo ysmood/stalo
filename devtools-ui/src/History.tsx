@@ -1,27 +1,24 @@
 import { css, cx } from "@emotion/css";
+import { useCurrSession, useSessions, selectSession } from "./store/session";
 import {
-  useCurrSession,
-  useSessions,
-  selectSession,
-  setSession,
-} from "./store/session";
-import {
+  scrollToBottom,
+  scrollToTop,
   selectRecord,
-  setScrollToHandler,
   useRecord,
+  useScrollTo,
   useSelected,
   useTimeDiff,
 } from "./store/history";
 import { setFilter, useFiltered } from "./store/filter";
 import { Button, Name, Title } from "./Components";
-import { FixedSizeList as List } from "react-window";
+import { FixedSizeList } from "react-window";
 import { recordHeight } from "./store/constants";
 import { LuArrowUpToLine, LuArrowDownToLine } from "react-icons/lu";
-import { createRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { LuDatabase } from "react-icons/lu";
 import { IoDocumentTextOutline } from "react-icons/io5";
-import debounce from "debounce";
+import { useDebounce } from "./store/utils";
 
 export default function History() {
   return (
@@ -60,16 +57,12 @@ function Footer() {
         <span>{useFiltered().size}</span>
       </div>
       <Button
-        onClick={() => {
-          setSession((s) => s.scrollTo(0));
-        }}
+        onClick={scrollToTop}
         icon={<LuArrowUpToLine />}
         title="Scroll to top record"
       />
       <Button
-        onClick={() => {
-          setSession((s) => s.scrollTo(s.history.size - 1));
-        }}
+        onClick={scrollToBottom}
         icon={<LuArrowDownToLine />}
         title="Scroll to bottom record"
       />
@@ -117,27 +110,25 @@ function Sessions() {
 
 function ItemList() {
   const filtered = useFiltered();
-  const ref = createRef<List>();
+  const ref = useRef<FixedSizeList>(null);
+  const scrollTo = useScrollTo();
+
+  const scroll = useDebounce(
+    (to: typeof scrollTo) => {
+      ref.current?.scrollToItem(to.val, "center");
+    },
+    100,
+    []
+  );
 
   useEffect(() => {
-    if (ref.current) {
-      const list = ref.current;
-      setScrollToHandler(
-        debounce((i) => {
-          list.scrollToItem(i, "center");
-        }, 100)
-      );
-
-      return () => {
-        setScrollToHandler(() => {});
-      };
-    }
-  }, [ref]);
+    scroll(scrollTo);
+  }, [scroll, scrollTo]);
 
   return (
     <AutoSizer>
       {({ height, width }) => (
-        <List
+        <FixedSizeList
           ref={ref}
           width={width}
           height={height}
@@ -147,7 +138,7 @@ function ItemList() {
           {({ index: i, style }) => {
             return <Item index={filtered.get(i)!} style={style} />;
           }}
-        </List>
+        </FixedSizeList>
       )}
     </AutoSizer>
   );

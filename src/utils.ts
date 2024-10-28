@@ -1,29 +1,6 @@
-import { useRef } from "react";
-import type { SetStore, Selector } from ".";
+import type { SetStore } from ".";
 
 export type Equal<R> = (a: R, b: R) => boolean;
-
-/**
- *
- * @param selector Same as the selector in useStore.
- * @param equal If equal returns true, the previous selected value will be returned,
- * else the current selected value will be returned.
- * @returns
- */
-export function useEqual<S, R>(
-  selector: Selector<S, R>,
-  equal: Equal<R>
-): Selector<S, R> {
-  const prev = useRef<R>();
-
-  return (val, serverSide) => {
-    const selected = selector(val, serverSide);
-    return (prev.current =
-      prev.current !== undefined && equal(prev.current, selected)
-        ? prev.current
-        : selected);
-  };
-}
 
 /**
  * A middleware to update the state with context.
@@ -79,12 +56,6 @@ export function uid(length: number = 8): string {
   return Array.from({ length }, () =>
     Math.floor(Math.random() * 36).toString(36)
   ).join("");
-}
-
-export type Immutable<T> = () => T;
-
-export function immutable<T>(obj: T): Immutable<T> {
-  return () => obj;
 }
 
 export function isString(value: unknown): value is string {
