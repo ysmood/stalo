@@ -58,7 +58,11 @@ export default function Slider({
     };
   }, [dragging, min, max, step, onChange]);
 
-  const handleMouseDown = () => {
+  const handleMouseDown: MouseEventHandler = (e) => {
+    e.preventDefault();
+
+    sliderRef.current?.focus();
+
     setDragging(true);
   };
 
