@@ -95,7 +95,9 @@ export default function Slider({
       onClick={handleClick}
       title={title}
     >
-      <div className="bg"></div>
+      <div className="bg">
+        <div className="progress" style={{ width: `${percentage}%` }}></div>
+      </div>
       <div
         className={cx("thumb", { dragging })}
         style={{
@@ -120,6 +122,15 @@ const style = css({
     background: "#727272",
     borderRadius: width,
     boxShadow: "inset 0 0 2px rgba(0, 0, 0, 0.3)",
+
+    ".progress": {
+      height: "100%",
+      background: "#1175bb",
+      borderRadius: width,
+      ":hover": {
+        background: "#0096ff",
+      },
+    },
   },
 
   ".thumb": {
