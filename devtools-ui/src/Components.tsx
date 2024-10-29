@@ -48,7 +48,7 @@ const buttonStyle = css({
   },
 
   "&.disabled": {
-    cursor: "not-allowed",
+    cursor: "unset",
     opacity: 0.3,
   },
 });
