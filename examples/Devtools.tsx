@@ -3,6 +3,8 @@ import { compose } from "stalo/lib/utils";
 import devtools, { meta } from "stalo/lib/devtools";
 import { Panel } from "@stalo/devtools-ui";
 
+// Only serializable store values can be displayed in the devtools.
+// Only deserializable store values can be modified by the devtools.
 const initStore = 0;
 
 const [useCount, _set] = create(initStore);
