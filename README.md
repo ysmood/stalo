@@ -64,4 +64,3 @@ Its implementation is not type safe and the return value is not intuitive. It's 
 
 The typescript support is not good enough, the API is not intuitive. `stalo` is more like `useState` which aligns with the react API style. Check the [comparison](https://github.com/ysmood/stalo/issues/1). Zustand [Slices Pattern](https://zustand.docs.pmnd.rs/guides/slices-pattern) can cause naming conflict issues.
 `stalo` can naturally scale states by modules and files.
-The setter of zustand must be called within a react component, while the setter of `stalo` can be called anywhere.
