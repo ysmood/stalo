@@ -14,8 +14,7 @@ const [useCount, _set] = create(initStore);
 const setCount = compose(_set, devtools(initStore, "Demo"));
 
 function increase(n: number) {
-  // The info here is optional, but it's useful for debugging.
-  setCount((c) => c + n, meta(increase, `Increase the count by ${n}`));
+  setCount((c) => c + n, meta("increase", `Increase the count by ${n}`));
 }
 
 // Here we create 2 count buttons to increase the store value.

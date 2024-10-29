@@ -115,7 +115,7 @@ function ItemList() {
 
   const scroll = useDebounce(
     (to: typeof scrollTo) => {
-      ref.current?.scrollToItem(to.val, "center");
+      ref.current?.scrollToItem(to.val, "smart");
     },
     100,
     []
