@@ -7,7 +7,6 @@ export default (async () => {
   const baseURL = await serve();
 
   return defineConfig({
-    testDir: "examples",
     use: {
       baseURL,
     },
@@ -32,7 +31,7 @@ async function serve() {
 
   app.use(vite.middlewares);
 
-  return new Promise<string>((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const listener = app.listen(0, (err) => {
       if (err) return reject(err);
 

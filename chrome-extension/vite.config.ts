@@ -6,7 +6,6 @@ import manifest from "./manifest";
 export default defineConfig({
   plugins: [react(), manifest],
   optimizeDeps: {
-    exclude: ["fsevents"],
     include: [
       `monaco-editor/esm/vs/language/json/json.worker`,
       `monaco-editor/esm/vs/editor/editor.worker`,

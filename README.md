@@ -47,6 +47,13 @@ More advanced examples:
 
 All the examples can be viewed [online](https://stalo-examples.vercel.app).
 
+To run the examples locally, clone the repo and run:
+
+```bash
+npm install
+npm start
+```
+
 ## FAQ
 
 > Why not use [react-use's createGlobalState](https://github.com/streamich/react-use/blob/master/docs/createGlobalState.md)?

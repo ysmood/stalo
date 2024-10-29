@@ -3,13 +3,13 @@
   "version": "0.6.24",
   "type": "module",
   "scripts": {
-    "start": "npm run build && vite --open",
-    "test": "vitest run --coverage && playwright test",
+    "start": "npm run build && cd examples && vite --open",
+    "test": "vitest run --coverage",
     "build": "tsc -b --clean && tsc -b",
     "lint": "eslint ./src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
-    "version": "node sync-version.js"
+    "version": "node src/sync-version.js"
   },
   "publishConfig": {
     "provenance": true
@@ -38,11 +38,6 @@
     "url": "https://github.com/ysmood/stalo"
   },
   "devDependencies": {
-    "@playwright/test": "^1.47.2",
-    "@rollup/plugin-commonjs": "^28.0.1",
-    "@rollup/plugin-node-resolve": "^15.3.0",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^12.1.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.0.1",
     "@types/chrome": "^0.0.278",
@@ -56,14 +51,10 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.12",
-    "express": "^4.21.0",
-    "playwright": "^1.47.2",
     "react-dom": "^18.3.1",
-    "rollup": "^4.24.0",
-    "rollup-plugin-inject-process-env": "^1.3.1",
-    "tslib": "^2.8.0",
     "typescript": "^5.5.2",
     "vite": "^5.4.8",
-    "vitest": "^2.1.2"
+    "vitest": "^2.1.2",
+    "playwright": "^1.47.2"
   }
 }

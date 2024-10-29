@@ -3,7 +3,6 @@ import { defineConfig } from "vite";
 const name = process.env.ENTRY!;
 
 export default defineConfig({
-  optimizeDeps: { exclude: ["fsevents"] },
   build: {
     emptyOutDir: false,
     chunkSizeWarningLimit: 10 * 1024 * 1024,

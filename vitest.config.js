@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   test: {
-    include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+    include: ["./src/*.test.ts", "./src/*.test.tsx"],
     browser: {
       enabled: true,
       name: "chromium",
@@ -13,8 +13,8 @@ export default defineConfig({
     },
     coverage: {
       provider: "istanbul",
-      include: ["src/**/*.ts", "src/**/*.tsx"],
+      include: ["./src/*.ts", "./src/*.tsx"],
     },
-    setupFiles: ["./vitest.setup.ts"],
+    setupFiles: ["./src/vitest.setup.ts"],
   },
 });
