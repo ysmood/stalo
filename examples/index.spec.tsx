@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test("counter", async ({ page }) => {
-  await page.goto("/examples/Counter");
+  await page.goto("/examples/Counter.tsx");
 
   const button = page.locator("button").first();
   const display = page.locator("h1").first();
@@ -16,7 +16,7 @@ test("counter", async ({ page }) => {
 });
 
 test("counter-persistent", async ({ page }) => {
-  await page.goto("/examples/CounterPersistent");
+  await page.goto("/examples/CounterPersistent.tsx");
 
   const button = page.locator("button").first();
   const display = page.locator("h1").first();

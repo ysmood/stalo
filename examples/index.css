@@ -1,5 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap");
+
 :root {
   --size-1: 4px;
+  --size-2: 10px;
+}
+
+body {
+  font-family: "Roboto", serif;
+  background-color: #f6f6f9;
+  color: rgb(26, 26, 26);
+}
+
+h1,
+h2,
+h3 {
+  color: rgb(46, 46, 46);
 }
 
 .mx-1 {
@@ -16,6 +31,79 @@
   display: flex;
 }
 
+.item-center {
+  align-items: center;
+}
+
 .gap-1 {
   gap: var(--size-1);
+}
+
+.gap-2 {
+  gap: var(--size-2);
+}
+
+.navbar {
+  border-bottom: 2px solid #ffffff;
+  padding-bottom: 10px;
+  margin-bottom: 5px;
+}
+
+.logo {
+  display: inline-block;
+  font-size: 20px;
+  color: rgb(48, 50, 54);
+}
+
+a {
+  text-decoration: none;
+  color: rgb(48, 50, 54);
+}
+
+a:visited {
+  color: rgb(86, 87, 87);
+}
+
+.button {
+  color: rgb(95, 95, 95);
+  background-color: #fff;
+  border: none;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  border: 1px solid #fff;
+}
+
+.button:hover {
+  color: rgb(0, 0, 0);
+  transform: scale(1.03);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.button:active {
+  transform: scale(1);
+}
+
+.button.active {
+  color: #000;
+  text-decoration: underline dashed;
+  box-shadow: none;
+  animation: glow 1.5s infinite ease-in;
+}
+
+@keyframes glow {
+  0%,
+  100% {
+  }
+  50% {
+    background: none;
+  }
+}
+
+.source {
+  font-size: 12px;
 }
