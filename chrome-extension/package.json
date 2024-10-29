@@ -1,6 +1,6 @@
 {
   "name": "@stalo/chrome-extension",
-  "version": "0.6.23",
+  "version": "0.6.24",
   "type": "module",
   "scripts": {
     "build": "vite build",
@@ -8,6 +8,6 @@
   },
   "dependencies": {
     "webext-bridge": "^6.0.1",
-    "stalo": "^0.6.23"
+    "stalo": "^0.6.24"
   }
 }
