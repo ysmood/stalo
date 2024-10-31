@@ -1,6 +1,6 @@
 {
   "name": "stalo",
-  "version": "0.6.24",
+  "version": "0.6.25",
   "type": "module",
   "scripts": {
     "start": "npm run build && cd examples && vite --open",
