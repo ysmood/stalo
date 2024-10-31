@@ -6,25 +6,17 @@ export function useStaging() {
   return useSession((s) => s.staging);
 }
 
-export function setEditorContent(content: string) {
+export function setStaging(content: string) {
   setSession((s) => {
-    s.editorContent = content;
-  });
-}
+    if (s.staging === content) return;
 
-export function setEditorHandlers(
-  get: () => string,
-  set: (value: string) => void
-) {
-  setSession((s) => {
-    s.getEditorValue = get;
-    s.setEditorValue = set;
+    s.staging = content;
   });
 }
 
 export function commit() {
   setSession((s) => {
-    const state = s.getEditorValue();
+    const state = s.staging;
 
     s.selected = s.history.size;
 
@@ -42,15 +34,11 @@ export function commit() {
 }
 
 export function useSameLast() {
-  return useSession((s) => s.editorContent === s.history.list.last()?.state);
-}
-
-export function useEditorValue() {
-  return useSession((s) => s.getEditorValue);
+  return useSession((s) => s.staging === s.history.list.last()?.state);
 }
 
 export function format() {
   setSession((s) => {
-    s.setEditorValue(JSON.stringify(JSON.parse(s.getEditorValue()), null, 2));
+    s.staging = JSON.stringify(JSON.parse(s.staging), null, 2);
   });
 }

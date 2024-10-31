@@ -18,7 +18,7 @@ import { useEffect, useRef, useState } from "react";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { LuDatabase } from "react-icons/lu";
 import { IoDocumentTextOutline } from "react-icons/io5";
-import { useDebounce } from "./store/utils";
+import { useThrottle } from "./store/utils";
 
 export default function History() {
   return (
@@ -113,7 +113,7 @@ function ItemList() {
   const ref = useRef<FixedSizeList>(null);
   const scrollTo = useScrollTo();
 
-  const scroll = useDebounce(
+  const scroll = useThrottle(
     (to: typeof scrollTo) => {
       ref.current?.scrollToItem(to.val, "smart");
     },

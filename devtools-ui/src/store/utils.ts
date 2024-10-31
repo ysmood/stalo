@@ -44,11 +44,45 @@ export function debounce<T extends AnyFunc>(callback: T, delay: number) {
   }) as T;
 }
 
-export function useDebounce<T extends AnyFunc>(
+function throttle<T extends AnyFunc>(callback: T, delay: number): T {
+  let lastCallTime = 0;
+  let timeoutId: NodeJS.Timeout | null = null;
+  let lastArgs: Parameters<T> | null = null;
+
+  return ((...args: Parameters<T>) => {
+    const now = Date.now();
+
+    if (lastCallTime === 0) {
+      callback(...args);
+      lastCallTime = now;
+    } else {
+      lastArgs = args;
+    }
+
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+      if (lastArgs) {
+        callback(...lastArgs);
+        lastArgs = null;
+        lastCallTime = Date.now();
+      }
+    }, delay);
+
+    if (now - lastCallTime >= delay) {
+      callback(...args);
+      lastCallTime = now;
+    }
+  }) as T;
+}
+
+export function useThrottle<T extends AnyFunc>(
   callback: T,
   delay: number,
   deps: DependencyList
 ): T {
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useMemo(() => debounce(callback, delay), [delay, ...deps]);
+  return useMemo(() => throttle(callback, delay), [delay, ...deps]);
 }

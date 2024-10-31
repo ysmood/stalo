@@ -22,9 +22,6 @@ export const emptySession = {
   name: "none", // connection name
 
   staging: "",
-  getEditorValue: () => "",
-  setEditorValue: (() => {}) as (value: string) => void,
-  editorContent: "",
 
   selected: -1,
   history: new History(),

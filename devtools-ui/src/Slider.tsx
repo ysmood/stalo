@@ -21,7 +21,7 @@ export default function Slider({
   max: number;
   step: number;
   value: number;
-  title: string;
+  title?: string;
   onChange: (value: number) => void;
 }) {
   const [dragging, setDragging] = useState(false);

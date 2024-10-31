@@ -2,12 +2,13 @@ import { commit, format, useSameLast } from "./store/staging";
 import { selectRecord, travelTo, useSelected } from "./store/history";
 import { css } from "@emotion/css";
 import { Button, Title } from "./Components";
-import { MonacoEditor } from "./MonacoEditor";
+import { Editor } from "./Editor";
 import { LuCheck, LuUndoDot } from "react-icons/lu";
 import { VscSymbolNamespace } from "react-icons/vsc";
 import { useFiltered } from "./store/filter";
 import Slider from "./Slider";
 import AutoSizer from "react-virtualized-auto-sizer";
+import { TbClockCode } from "react-icons/tb";
 
 export default function Staging() {
   return (
@@ -16,7 +17,7 @@ export default function Staging() {
       <div>
         <AutoSizer>
           {({ width, height }) => (
-            <MonacoEditor className="editor" width={width} height={height} />
+            <Editor className="editor" width={width} height={height} />
           )}
         </AutoSizer>
       </div>
@@ -57,14 +58,16 @@ function Travel() {
   const value = filtered.indexOf(useSelected());
 
   return (
-    <div className="travel">
-      <Title text="Travel" />
+    <div
+      className="travel"
+      title="Time travel the state records by dragging the slider"
+    >
+      <TbClockCode size={20} />
       <Slider
         step={1}
         min={0}
         max={filtered.size - 1}
         value={value}
-        title="Time travel the state records by dragging the slider"
         onChange={async (val) => {
           const index = val;
           travelTo(filtered.get(index)!);
@@ -96,7 +99,7 @@ const style = css({
       gridTemplateColumns: "auto 1fr",
       flex: 1,
       alignItems: "center",
-      gap: 10,
+      gap: 5,
       padding: "0 10px",
 
       input: {
