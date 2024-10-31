@@ -10,7 +10,7 @@ import {
   useTimeDiff,
 } from "./store/history";
 import { setFilter, useFiltered } from "./store/filter";
-import { Button, Name, Title } from "./Components";
+import { Button, Name, TimeDiff, Title } from "./Components";
 import { FixedSizeList } from "react-window";
 import { recordHeight } from "./store/constants";
 import { LuArrowUpToLine, LuArrowDownToLine } from "react-icons/lu";
@@ -161,43 +161,14 @@ function Item({ index, style }: { index: number; style: React.CSSProperties }) {
         <code className="index">{index.toString().padStart(4, " ")}</code>
       </div>
       <div className="line light">
-        {rec.description === undefined ? NoDescription() : rec.description}
+        {rec.description === undefined ? (
+          <span className="no-desc">No description</span>
+        ) : (
+          rec.description
+        )}
       </div>
     </div>
   );
-}
-
-function TimeDiff({ duration }: { duration: number }) {
-  if (duration === 0) return null;
-
-  const minus = duration < 0;
-
-  duration = Math.abs(duration);
-
-  const sec = duration / 1000;
-  const min = Math.floor(sec / 60);
-  const hrs = Math.floor(min / 60);
-
-  return (
-    <div className="time-diff">
-      {minus ? (
-        <span className="minus">-</span>
-      ) : (
-        <span className="plus">+</span>
-      )}
-      {hrs > 0 ? <span>{hrs}h</span> : null}
-      {min > 0 ? <span className="min">{min % 60}m</span> : null}
-      {sec % 60 > 1 ? (
-        <span>{(sec % 60).toFixed(2)}s</span>
-      ) : (
-        <span>{duration}ms</span>
-      )}
-    </div>
-  );
-}
-
-function NoDescription() {
-  return <span className="no-desc">No description</span>;
 }
 
 const style = css({
@@ -292,26 +263,10 @@ const style = css({
       gap: 10,
       color: "#ccc",
 
-      ".time-diff": {
-        fontSize: 10,
-        fontFamily: "monospace",
-
-        ".minus": {
-          color: "#d84685",
-        },
-        ".plus": {
-          color: "#66ffac",
-        },
-      },
-
       ".index": {
         color: "#777",
         fontSize: 10,
         whiteSpace: "pre",
-      },
-
-      ".min": {
-        color: "#e1e05a",
       },
     },
 

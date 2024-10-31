@@ -124,3 +124,56 @@ const nameStyle = css({
     color: "#6f86eb",
   },
 });
+
+export function TimeDiff({ duration }: { duration: number }) {
+  if (duration === 0) return null;
+
+  const minus = duration < 0;
+
+  duration = Math.abs(duration);
+
+  const sec = duration / 1000;
+  const min = Math.floor(sec / 60);
+  const hrs = Math.floor(min / 60);
+
+  return (
+    <div className={timeDiffStyle}>
+      {minus ? (
+        <span className="minus">-</span>
+      ) : (
+        <span className="plus">+</span>
+      )}
+      {hrs > 0 ? <span className="hr">{hrs}h</span> : null}
+      {min > 0 ? <span className="min">{min % 60}m</span> : null}
+      {sec % 60 > 1 ? (
+        <span className="sec">{(sec % 60).toFixed(2)}s</span>
+      ) : (
+        <span className="ms">{duration}ms</span>
+      )}
+    </div>
+  );
+}
+
+const timeDiffStyle = css({
+  fontSize: 10,
+  fontFamily: "monospace",
+
+  ".minus": {
+    color: "#d84685",
+  },
+  ".plus": {
+    color: "#66ffac",
+  },
+
+  ".min": {
+    color: "#e1e05a",
+  },
+
+  ".sec": {
+    color: "#aaa",
+  },
+
+  ".ms": {
+    color: "#777",
+  },
+});
