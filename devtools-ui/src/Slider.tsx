@@ -102,11 +102,12 @@ export default function Slider({
 
   return (
     <div
-      className={style}
+      className={cx(style, { dragging })}
       ref={sliderRef}
       tabIndex={0}
       onClick={onClick}
       title={title}
+      onKeyDown={handleKeyDown}
     >
       <div className="bg">
         <div
@@ -118,13 +119,12 @@ export default function Slider({
         ></div>
       </div>
       <div
-        className={cx("thumb", { dragging })}
+        className={"thumb"}
         style={{
           left: `${percentage}%`,
           transition: clicking ? `left ${animationDuration}ms` : "",
         }}
         onMouseDown={handleMouseDown}
-        onKeyDown={handleKeyDown}
       ></div>
     </div>
   );
@@ -148,51 +148,30 @@ const style = css({
 
     ".progress": {
       height: "100%",
-      background: "#1175bb",
       borderRadius: width,
-      ":hover": {
-        background: "#0096ff",
-      },
+      background: "#1175bb",
     },
   },
 
   ".thumb": {
     position: "absolute",
     transform: "translateX(-50%)",
-    background: "#727272",
+    background: "#1784d0",
     width: width,
     height: "100%",
     borderRadius: "50%",
     boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.7)",
   },
 
-  ".thumb:hover": {
-    background: "#ddd",
+  "&.dragging .thumb, .thumb:hover": {
+    background: "#40a1e4",
   },
 
-  ".bg:hover": {
-    background: "#ccc",
+  "&.dragging .bg, .bg:hover": {
+    background: "#aaa",
   },
 
-  ".thumb.dragging": {
-    background: "#fff",
-  },
-
-  "&:focus": {
-    ".bg, .thumb": {
-      background: "#aaa",
-    },
-
-    ".bg:hover": {
-      background: "#ccc",
-    },
-
-    ".thumb:hover": {
-      background: "#ddd",
-    },
-
-    ".thumb.dragging": {
-      background: "#fff",
-    },
+  "&.dragging .progress, .progress:hover": {
+    background: "#1784d0",
   },
 });
