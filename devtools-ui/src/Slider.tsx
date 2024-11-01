@@ -5,9 +5,11 @@ import {
   useEffect,
   KeyboardEventHandler,
   MouseEventHandler,
+  useCallback,
 } from "react";
 
 const width = 16;
+const animationDuration = 200;
 
 export default function Slider({
   min,
@@ -26,10 +28,11 @@ export default function Slider({
 }) {
   const [dragging, setDragging] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const [clicking, setClicking] = useState(0);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!dragging || !sliderRef.current) return;
+  const updateFromMouse = useCallback(
+    (e: MouseEvent) => {
+      if (!sliderRef.current) return;
 
       const rect = sliderRef.current.getBoundingClientRect();
       const offsetX = e.clientX - rect.left;
@@ -38,6 +41,14 @@ export default function Slider({
         Math.max(min, min + (offsetX / rect.width) * (max - min))
       );
       onChange(Math.round(newValue / step) * step);
+    },
+    [min, max, step, onChange]
+  );
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!dragging) return;
+      updateFromMouse(e);
     };
 
     const handleMouseUp = () => {
@@ -56,7 +67,7 @@ export default function Slider({
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [dragging, min, max, step, onChange]);
+  }, [dragging, updateFromMouse]);
 
   const handleMouseDown: MouseEventHandler = (e) => {
     e.preventDefault();
@@ -74,13 +85,17 @@ export default function Slider({
     }
   };
 
-  const handleClick: MouseEventHandler = (event) => {
-    const slider = sliderRef.current;
-    if (!slider) return;
-    const rect = slider.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const newValue = min + (clickX / rect.width) * (max - min);
-    onChange(Math.round(newValue / step) * step);
+  const onClick: MouseEventHandler<HTMLDivElement> = (e) => {
+    if (clicking) {
+      clearTimeout(clicking);
+    }
+
+    const id = window.setTimeout(() => {
+      setClicking(0);
+    }, animationDuration);
+    setClicking(id);
+
+    updateFromMouse(e as unknown as MouseEvent);
   };
 
   const percentage = ((value - min) / (max - min)) * 100;
@@ -90,19 +105,26 @@ export default function Slider({
       className={style}
       ref={sliderRef}
       tabIndex={0}
-      onMouseDown={handleMouseDown}
-      onKeyDown={handleKeyDown}
-      onClick={handleClick}
+      onClick={onClick}
       title={title}
     >
       <div className="bg">
-        <div className="progress" style={{ width: `${percentage}%` }}></div>
+        <div
+          className="progress"
+          style={{
+            width: `${percentage}%`,
+            transition: clicking ? `width ${animationDuration}ms` : "",
+          }}
+        ></div>
       </div>
       <div
         className={cx("thumb", { dragging })}
         style={{
           left: `${percentage}%`,
+          transition: clicking ? `left ${animationDuration}ms` : "",
         }}
+        onMouseDown={handleMouseDown}
+        onKeyDown={handleKeyDown}
       ></div>
     </div>
   );
@@ -115,6 +137,7 @@ const style = css({
   margin: "0 8px",
   display: "grid",
   alignItems: "center",
+  cursor: "pointer",
 
   ".bg": {
     margin: "0 -8px",
@@ -136,7 +159,6 @@ const style = css({
   ".thumb": {
     position: "absolute",
     transform: "translateX(-50%)",
-    cursor: "pointer",
     background: "#727272",
     width: width,
     height: "100%",
