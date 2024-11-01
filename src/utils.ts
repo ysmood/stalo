@@ -1,5 +1,7 @@
 import type { SetStore } from ".";
 
+export { version } from "./version";
+
 export type Equal<R> = (a: R, b: R) => boolean;
 
 /**

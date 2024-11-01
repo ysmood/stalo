@@ -3,6 +3,7 @@ import { Link, Switch, Router, Route, useLocation } from "wouter";
 import { lazy, ReactNode, Suspense } from "react";
 import { FaGithub } from "react-icons/fa";
 import { GoFileCode } from "react-icons/go";
+import { version } from "stalo/lib/utils";
 
 type Import = () => Promise<{ default: React.ComponentType<unknown> }>;
 
@@ -39,7 +40,7 @@ function Navbar() {
 
   return (
     <div className="navbar flex item-center gap-2">
-      <div className="logo">Stalo Examples</div>
+      <div className="logo">Stalo Examples v{version}</div>
       <Button>
         <a href="https://github.com/ysmood/stalo" target="about:blank">
           <FaGithub size={16} />
