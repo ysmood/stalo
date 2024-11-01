@@ -63,7 +63,11 @@ export default function create<S>(init: S) {
   };
 
   const setStore: SetStore<S> = (ns: NextState<S>) => {
-    state = produce(state, ns);
+    const newState = produce(state, ns);
+
+    if (newState === state) return;
+
+    state = newState;
 
     // notify all listeners
     run();

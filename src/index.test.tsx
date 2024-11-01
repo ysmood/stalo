@@ -125,3 +125,28 @@ it("react to deep value", async () => {
   await userEvent.click(await screen.findByText("no"));
   expect(screen.queryByText("yes")).not.toBeNull();
 });
+
+it("if no change no publish", async () => {
+  const [useVal, setVal] = create(1);
+
+  let count = 0;
+  function A() {
+    return (
+      <>
+        {useVal(() => {
+          count++;
+        })}
+      </>
+    );
+  }
+
+  render(<A />);
+
+  const prev = count;
+
+  await setVal(1);
+  await setVal(1);
+  await setVal(1);
+
+  expect(count).toBe(prev);
+});
