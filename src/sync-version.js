@@ -11,7 +11,8 @@ const version = JSON.parse(readFileSync('package.json')).version;
 	writeFileSync(p, JSON.stringify(info, null, 2))
 })
 
+writeFileSync('src/version.ts', `export const version = "${version}";\n`)
+
 execSync(`npm i`, { stdio: 'inherit' })
 execSync(`git add .`, { stdio: 'inherit' })
 
-writeFileSync('src/version.ts', `export const version = "${version}";\n`)
