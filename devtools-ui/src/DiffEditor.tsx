@@ -19,8 +19,11 @@ export function DiffEditor({
 
   const setEditorContent = useThrottle(
     (prev: string, curr: string) => {
-      editorRef.current?.getModel()?.original.setValue(prev);
-      editorRef.current?.getModel()?.modified.setValue(curr);
+      if (editorRef.current?.getModel()?.original.getValue() !== prev)
+        editorRef.current?.getModel()?.original.setValue(prev);
+
+      if (editorRef.current?.getModel()?.modified.getValue() !== curr)
+        editorRef.current?.getModel()?.modified.setValue(curr);
     },
     100,
     []

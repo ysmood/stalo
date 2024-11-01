@@ -17,7 +17,10 @@ export function Editor({
   const value = useStaging();
 
   const setEditorContent = useThrottle(
-    (val: string) => editorRef.current?.getModel()?.setValue(val),
+    (val: string) => {
+      if (editorRef.current?.getModel()?.getValue() === val) return;
+      editorRef.current?.getModel()?.setValue(val);
+    },
     100,
     []
   );
