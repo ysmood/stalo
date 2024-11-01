@@ -6,6 +6,13 @@ export function useStaging() {
   return useSession((s) => s.staging);
 }
 
+export function usePrevStateContent(): string {
+  return useSession((s) => {
+    if (s.selected === 0) return s.staging;
+    return s.history.list.get(s.selected - 1)!.state;
+  });
+}
+
 export function setStaging(content: string) {
   setSession((s) => {
     if (s.staging === content) return;
@@ -40,5 +47,15 @@ export function useSameLast() {
 export function format() {
   setSession((s) => {
     s.staging = JSON.stringify(JSON.parse(s.staging), null, 2);
+  });
+}
+
+export function useDiffMode() {
+  return useSession((s) => s.diffMode);
+}
+
+export function toggleDiffMode() {
+  setSession((s) => {
+    s.diffMode = !s.diffMode;
   });
 }

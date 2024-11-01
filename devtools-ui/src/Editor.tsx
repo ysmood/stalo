@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { setStaging, useStaging } from "./store/staging";
-import monaco from "./store/editor";
+import monaco, { theme } from "./store/editor";
 import { useThrottle } from "./store/utils";
 
 export function Editor({
@@ -27,7 +27,7 @@ export function Editor({
 
     const editor = monaco.editor.create(container.current, {
       language: "json",
-      theme: "vs-dark",
+      theme,
       wordBasedSuggestions: "currentDocument",
       quickSuggestions: true,
     });

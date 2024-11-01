@@ -22,6 +22,7 @@ export const emptySession = {
   name: "none", // connection name
 
   staging: "",
+  diffMode: false,
 
   selected: -1,
   history: new History(),

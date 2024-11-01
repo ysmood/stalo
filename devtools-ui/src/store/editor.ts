@@ -17,3 +17,5 @@ window.MonacoEnvironment = {
 };
 
 export * as default from "monaco-editor/esm/vs/editor/editor.api";
+
+export const theme = "vs-dark";

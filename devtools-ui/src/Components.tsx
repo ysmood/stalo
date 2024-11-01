@@ -7,6 +7,7 @@ export function Button({
   onClick,
   className,
   title,
+  selected = false,
   disabled = false,
 }: {
   icon?: React.ReactElement;
@@ -14,12 +15,17 @@ export function Button({
   onClick?: () => void;
   className?: string;
   title: string;
+  selected?: boolean;
   disabled?: boolean;
 }) {
   return (
     <div
       onClick={disabled ? undefined : onClick}
-      className={cx(buttonStyle, className, { disabled, active: !disabled })}
+      className={cx(buttonStyle, className, {
+        disabled,
+        active: !disabled,
+        selected,
+      })}
       title={title}
     >
       {icon} {text}

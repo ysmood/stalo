@@ -1,4 +1,10 @@
-import { commit, format, useSameLast } from "./store/staging";
+import {
+  commit,
+  format,
+  toggleDiffMode,
+  useDiffMode,
+  useSameLast,
+} from "./store/staging";
 import { selectRecord, travelTo, useSelected } from "./store/history";
 import { css } from "@emotion/css";
 import { Button, Title } from "./Components";
@@ -9,23 +15,39 @@ import { useFiltered } from "./store/filter";
 import Slider from "./Slider";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { TbClockCode } from "react-icons/tb";
+import { DiffEditor } from "./DiffEditor";
+import { VscDiffMultiple } from "react-icons/vsc";
 
 export default function Staging() {
   return (
     <div className={style}>
       <Toolbar />
-      <div>
-        <AutoSizer>
-          {({ width, height }) => (
+      <Editors />
+    </div>
+  );
+}
+
+function Editors() {
+  const diffMode = useDiffMode();
+
+  return (
+    <div>
+      <AutoSizer>
+        {({ width, height }) =>
+          diffMode ? (
+            <DiffEditor width={width} height={height} />
+          ) : (
             <Editor className="editor" width={width} height={height} />
-          )}
-        </AutoSizer>
-      </div>
+          )
+        }
+      </AutoSizer>
     </div>
   );
 }
 
 function Toolbar() {
+  const diffMode = useDiffMode();
+
   return (
     <div className="toolbar">
       <Title text="Staging" />
@@ -48,6 +70,13 @@ function Toolbar() {
         title="Format json"
       />
 
+      <Button
+        onClick={() => toggleDiffMode()}
+        icon={<VscDiffMultiple size={14} />}
+        className="diff"
+        title="Diff mode"
+        selected={diffMode}
+      />
       <Travel />
     </div>
   );
@@ -92,6 +121,13 @@ const style = css({
 
     ".format": {
       fontFamily: "monospace",
+    },
+
+    ".diff.selected": {
+      background: "#ad0c46",
+      "&:hover": {
+        background: " #e6427d",
+      },
     },
 
     ".travel": {
