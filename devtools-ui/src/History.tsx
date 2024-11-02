@@ -19,6 +19,7 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import { LuDatabase } from "react-icons/lu";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { useThrottle } from "./store/utils";
+import * as List from "./store/list";
 
 export default function History() {
   return (
@@ -54,7 +55,7 @@ function Footer() {
       <Filter />
       <div className="total">
         <IoDocumentTextOutline size={12} />
-        <span>{useFiltered().size}</span>
+        <span>{List.getSize(useFiltered())}</span>
       </div>
       <Button
         onClick={scrollToTop}
@@ -132,11 +133,11 @@ function ItemList() {
           ref={ref}
           width={width}
           height={height}
-          itemCount={filtered.size}
+          itemCount={List.getSize(filtered)}
           itemSize={recordHeight}
         >
           {({ index: i, style }) => {
-            return <Item index={filtered.get(i)!} style={style} />;
+            return <Item index={List.getItem(filtered, i)!} style={style} />;
           }}
         </FixedSizeList>
       )}
@@ -145,7 +146,7 @@ function ItemList() {
 }
 
 function Item({ index, style }: { index: number; style: React.CSSProperties }) {
-  const rec = useRecord(index);
+  const { rec } = useRecord(index);
 
   return (
     <div
@@ -250,6 +251,9 @@ const style = css({
 
     ".line": {
       padding: "0 10px",
+      textOverflow: "ellipsis",
+      overflow: "hidden",
+      whiteSpace: "nowrap",
     },
 
     ".light": {

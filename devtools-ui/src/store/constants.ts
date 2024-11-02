@@ -1,5 +1,5 @@
 import type { StoreRecord } from "stalo/lib/devtools";
-import History from "./history.class";
+import { newRecords } from "./records";
 
 export interface Connection {
   id: string;
@@ -25,7 +25,7 @@ export const emptySession = {
   diffMode: false,
 
   selected: -1,
-  history: new History(),
+  records: newRecords(),
 
   scrollTo: { val: 0 },
 };

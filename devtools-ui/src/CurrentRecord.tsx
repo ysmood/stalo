@@ -8,27 +8,25 @@ import { CiAt } from "react-icons/ci";
 
 export function CurrentRecord() {
   const id = useSelected();
-  const record = useRecord(id);
-
-  if (!record) {
-    return null;
-  }
+  const { rec: record } = useRecord(id);
 
   return (
     <div className={cx(style, "info")}>
       <div className="first-row">
-        <div title="ID of the record">
-          <VscSymbolNumeric /> <code className="id">{record.id}</code>
+        <div title="ID of the record" className="id">
+          <VscSymbolNumeric /> <code>{id}</code>
         </div>
-        <div>
+        <div className="name">
           <CiAt size={14} /> <Name name={record.name} />
         </div>
-        <div>
+        <div className="time">
           <LuClock /> <Time time={record.createdAt} />
         </div>
       </div>
       <div>
-        <TfiCommentAlt />
+        <div style={{ width: 18 }}>
+          <TfiCommentAlt size={14} />
+        </div>
         <div className="desc">
           {record.description || <span>No description</span>}
         </div>
@@ -52,18 +50,29 @@ const style = css({
   ".first-row": {
     gap: 10,
     height: "2em",
+    overflowY: "scroll",
   },
 
   ".id": {
     color: "#eee",
   },
 
+  ".name": {
+    svg: {
+      minWidth: "1em",
+    },
+  },
+
+  ".time": {
+    minWidth: "13em",
+  },
+
   ".desc": {
     color: "#ddd",
     marginLeft: 4,
-    lineHeight: "1.5em",
     height: "3em",
-    overflow: "scroll",
+    overflowY: "scroll",
+    flex: 1,
 
     span: {
       color: "#666",

@@ -2,15 +2,15 @@ import { setSession, useSession } from "./session";
 import { debounce } from "./utils";
 
 export function useFilter() {
-  return useSession((s) => s.history.filter);
+  return useSession((s) => s.records.filter);
 }
 
 export function useFiltered() {
-  return useSession((s) => s.history.filtered);
+  return useSession((s) => s.records.filtered);
 }
 
 export const setFilter = debounce((filter: string) => {
   setSession((s) => {
-    s.history.filter = filter;
+    s.records.filter = filter;
   });
 }, 300);

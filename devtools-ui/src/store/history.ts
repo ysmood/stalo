@@ -1,14 +1,20 @@
 import { setSession, useSession } from "./session";
 import { connections, Session } from "./constants";
+import { getState } from "./store-recordx";
+import { getRecord } from "./records";
+import * as List from "./list";
 
 export function useRecord(i: number) {
-  return useSession((s) => s.history.get(i));
+  return useSession((s) => getRecord(s.records, i));
 }
 
 // diff between a record with the selected record
 export function useTimeDiff(i: number) {
   return useSession((s) => {
-    return s.history.get(i).createdAt - s.history.get(s.selected).createdAt;
+    return (
+      getRecord(s.records, i).rec.createdAt -
+      getRecord(s.records, s.selected).rec.createdAt
+    );
   });
 }
 
@@ -19,11 +25,11 @@ export function useSelected() {
 export function selectRecord(i: number) {
   setSession((s) => {
     if (i < 0) {
-      i = s.history.size + i;
+      i = List.getSize(s.records.list) + i;
     }
 
     s.selected = i;
-    s.staging = s.history.get(i).state;
+    s.staging = getState(getRecord(s.records, i));
   });
 }
 
@@ -31,7 +37,7 @@ export function travelTo(i: number) {
   setSession((s) => {
     s.selected = i;
     setScrollTo(s, i);
-    const state = s.history.get(i).state;
+    const state = getState(getRecord(s.records, i));
     s.staging = state;
     setState(s, state);
   });
@@ -49,7 +55,7 @@ export function scrollToTop() {
 
 export function scrollToBottom() {
   setSession((s) => {
-    setScrollTo(s, s.history.size - 1);
+    setScrollTo(s, List.getSize(s.records.list) - 1);
   });
 }
 

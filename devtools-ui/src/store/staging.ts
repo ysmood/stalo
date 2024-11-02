@@ -1,6 +1,9 @@
 import { setSession, useSession } from "./session";
 import { commitName } from "../constants";
 import { setScrollTo, setState } from "./history";
+import { getState } from "./store-recordx";
+import { addRecord, getRecord } from "./records";
+import * as List from "./list";
 
 export function useStaging() {
   return useSession((s) => s.staging);
@@ -8,8 +11,8 @@ export function useStaging() {
 
 export function usePrevStateContent(): string {
   return useSession((s) => {
-    if (s.selected === 0) return s.staging;
-    return s.history.list.get(s.selected - 1)!.state;
+    if (s.selected === 0) return "";
+    return getState(getRecord(s.records, s.selected - 1)!);
   });
 }
 
@@ -25,11 +28,11 @@ export function commit() {
   setSession((s) => {
     const state = s.staging;
 
-    s.selected = s.history.size;
+    s.selected = List.getSize(s.records.list);
 
     setScrollTo(s, s.selected);
 
-    s.history.add({
+    addRecord(s.records, {
       state,
       name: commitName,
       description: "Committed by devtools",
@@ -41,7 +44,9 @@ export function commit() {
 }
 
 export function useSameLast() {
-  return useSession((s) => s.staging === s.history.list.last()?.state);
+  return useSession(
+    (s) => s.staging === getState(List.getLast(s.records.list))
+  );
 }
 
 export function format() {

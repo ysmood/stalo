@@ -1,6 +1,5 @@
 import { create } from "stalo/lib/immer";
 import { enablePatches, setAutoFreeze } from "immer";
-import History from "./history.class";
 import {
   bufferDelay,
   Connection,
@@ -9,6 +8,7 @@ import {
   initStore,
 } from "./constants";
 import { bufferedCall } from "./utils";
+import { addRecord, newRecords } from "./records";
 
 setAutoFreeze(false);
 enablePatches();
@@ -32,7 +32,7 @@ export function plug(c: Connection) {
         name: c.name,
         selected: 0,
         staging: rec.state,
-        history: new History(rec),
+        records: newRecords(rec),
       };
     });
   };
@@ -40,7 +40,7 @@ export function plug(c: Connection) {
   c.onRecord = bufferedCall(bufferDelay, (list) => {
     setStore((store) => {
       list.forEach((rec) => {
-        store.sessions[id].history.add(rec);
+        addRecord(store.sessions[id].records, rec);
       });
     });
   });
