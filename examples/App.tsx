@@ -13,6 +13,7 @@ const examples = {
   MonolithStore: () => import("./MonolithStore"),
   TodoApp: () => import("./TodoApp"),
   "Devtools.tsx": () => import("./Devtools"),
+  "DevtoolsDiffPatch.tsx": () => import("./DevtoolsDiffPatch"),
 };
 
 const firstExample = Object.keys(examples)[0];
