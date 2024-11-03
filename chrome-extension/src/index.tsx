@@ -11,20 +11,22 @@ import {
 } from "./constants";
 import { unplug, Connection, Panel, plug } from "@stalo/devtools-ui";
 
-connect();
-render();
+main();
 
-function render() {
+function main() {
+  connect();
+
   const root = document.createElement("div");
 
   document.body.appendChild(root);
 
-  ReactDOM.createRoot(root).render(<Panel chromeExtension />);
+  ReactDOM.createRoot(root).render(<Panel customConnect />);
 }
 
 function connect() {
   const list: Record<string, Connection> = {};
 
+  // Just acknowledge connection don't need to do anything
   onMessage(eventConnect, () => {});
 
   chrome.runtime.onConnect.addListener((port) => {

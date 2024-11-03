@@ -103,3 +103,22 @@ test("todo-app", async ({ page }) => {
   await expect(todoToggle.first()).toBeDisabled();
   await expect(input).toHaveCount(0);
 });
+
+test("devtools", async ({ page }) => {
+  await page.goto("/examples/Devtools.tsx");
+
+  const btn = page.locator("button", { hasText: "Increase by 10" });
+  const record02 = page.locator(".records .item:nth-child(2)");
+  const sessions = page.locator(".sessions select");
+  const editor = page.locator(".editor .view-lines");
+
+  await sessions.selectOption({ label: "Demo" });
+
+  await btn.click();
+
+  await record02.click();
+
+  await expect(record02).toContainText("Increase the count by 10");
+
+  await expect(editor).toHaveText("10");
+});

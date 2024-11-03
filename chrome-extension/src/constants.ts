@@ -4,9 +4,9 @@ export const eventInit = "@@stalo-init";
 export const eventRecord = "@@stalo-record";
 export const eventSet = "@@stalo-set";
 
-type StoreRecord = {
+type StoreRecord<T> = {
   name: string;
-  state: string | undefined;
+  state: T;
   description?: string;
   createdAt: number;
 };
@@ -14,7 +14,7 @@ type StoreRecord = {
 export type Init = {
   sessionID: string;
   name: string;
-  record: StoreRecord;
+  record: StoreRecord<string>;
 };
 
 export type Set = {
@@ -24,5 +24,5 @@ export type Set = {
 
 export type Record = {
   id: string;
-  record: StoreRecord;
+  record: StoreRecord<string | undefined>;
 };

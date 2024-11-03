@@ -1,4 +1,4 @@
-import { getDevtools, DEVTOOLS, Devtools, encode } from "stalo/lib/devtools";
+import { onDevtools, encode, Devtools } from "stalo/lib/devtools";
 import { initName } from "@stalo/devtools-ui/lib/constants";
 import { sendMessage, setNamespace, onMessage } from "webext-bridge/window";
 import {
@@ -18,20 +18,12 @@ async function connectAll() {
 
   const list: Record<string, Devtools<object>> = {};
 
-  function updateList() {
-    getDevtools<object>().forEach((d) => {
-      if (list[d.id]) return;
+  onDevtools<object>((d) => {
+    if (list[d.id]) return;
 
-      list[d.id] = d;
-      connect(d);
-    });
-  }
-
-  window.addEventListener(DEVTOOLS, () => {
-    updateList();
+    list[d.id] = d;
+    connect(d);
   });
-
-  setInterval(updateList, 1000);
 
   onMessage<Set>(eventSet, ({ data }) => {
     list[data.id].state = JSON.parse(data.state);

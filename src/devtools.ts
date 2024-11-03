@@ -8,6 +8,12 @@ const patch = Symbol("patch");
 
 export const DEVTOOLS = "__stalo_devtools__";
 
+type DevtoolsList<S> = Set<Devtools<S>>;
+
+interface Global<S> {
+  [DEVTOOLS]?: DevtoolsList<S>;
+}
+
 export interface DevtoolsContext {
   [name]?: string;
   [description]?: string;
@@ -23,6 +29,12 @@ export interface StoreRecord<S> {
   patch?: Patch[];
 }
 
+/**
+ * A devtools middleware to inject devtools to a store.
+ * @param init The initial state of the store.
+ * @param devName The name of the devtools instance for self reflection.
+ * @returns
+ */
 export default function devtools<S>(init: S, devName = ""): Middleware<S> {
   return (set) => {
     const [subscribe, publish] = pipeline<Parameters<Subscriber<S>>>();
@@ -50,31 +62,58 @@ export default function devtools<S>(init: S, devName = ""): Middleware<S> {
   };
 }
 
-type DevtoolsList<S> = Set<Devtools<S>>;
-
 function addToGlobal<S>(dt: Devtools<S>) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const win = window as any;
+  const g = globalThis as Global<S>;
 
-  let list: DevtoolsList<S> = win[DEVTOOLS];
+  let list = g[DEVTOOLS];
 
   if (!list) {
     list = new Set();
-    win[DEVTOOLS] = list;
+    g[DEVTOOLS] = list;
   }
 
   list.add(dt);
-
-  window.dispatchEvent(new CustomEvent(DEVTOOLS));
 }
 
-export function getDevtools<S>(): DevtoolsList<S> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (window as any)[DEVTOOLS] || [];
+function getDevtools<S>(): DevtoolsList<S> {
+  const list = (globalThis as Global<S>)[DEVTOOLS];
+  return list === undefined ? new Set() : list;
+}
+
+export function onDevtools<S>(fn: (dt: Devtools<S>) => void) {
+  const got = new Set<Devtools<S>>();
+  const abort = new AbortController();
+
+  function get(past: number) {
+    const list = getDevtools<S>();
+
+    for (const dt of list) {
+      if (got.has(dt)) {
+        continue;
+      }
+
+      got.add(dt);
+      fn(dt);
+    }
+
+    const interval = past < 1000 ? 100 : 1000;
+
+    const tmr = setTimeout(get, interval, past + interval);
+    abort.signal.addEventListener("abort", () => clearTimeout(tmr));
+  }
+
+  get(0);
+
+  return () => {
+    abort.abort();
+  };
 }
 
 type Subscriber<S> = (record: StoreRecord<S>) => void;
 
+/**
+ * A devtools instance that can be used get, subscribe and set states.
+ */
 export class Devtools<S> {
   private current: S;
   private closeSubscriber: () => void;

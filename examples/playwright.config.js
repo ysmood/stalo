@@ -27,6 +27,8 @@ async function serve() {
     hmr: false,
   };
 
+  viteConfig.logLevel = "error";
+
   const vite = await createServer(viteConfig);
 
   app.use(vite.middlewares);

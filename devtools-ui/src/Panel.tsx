@@ -7,21 +7,20 @@ import connect from "./store/connect";
 import { useEffect } from "react";
 
 export default function Panel({
-  chromeExtension,
   width,
   height,
+  customConnect,
 }: {
-  chromeExtension?: boolean;
   width?: number;
   height?: number;
+  customConnect?: boolean;
 }) {
   useEffect(() => {
-    if (!chromeExtension) {
-      const stop = new AbortController();
-      connect(stop.signal);
-      return () => stop.abort();
-    }
-  }, [chromeExtension]);
+    if (customConnect) return;
+    const stop = new AbortController();
+    connect(stop.signal);
+    return () => stop.abort();
+  }, [customConnect]);
 
   return (
     <div className={style} style={{ width, height }}>

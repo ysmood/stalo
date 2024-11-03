@@ -1,23 +1,26 @@
-import { it, expect, describe, afterEach } from "vitest";
+import { it, expect, describe, afterEach, vi } from "vitest";
 import create, { produce } from ".";
 import { compose, Middleware } from "./utils";
 import devtools, {
+  DEVTOOLS,
+  Devtools,
   encode,
-  getDevtools,
   immerWithPatch,
   meta,
+  onDevtools,
   StoreRecord,
 } from "./devtools";
 import { render } from "@testing-library/react";
 
 describe("devtools", () => {
+  vi.useFakeTimers();
+
   afterEach(() => {
-    getDevtools().forEach((d) => {
-      d.close();
-    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (globalThis as any)[DEVTOOLS] = undefined;
   });
 
-  it("basic", async () => {
+  it("basic", async ({ onTestFinished }) => {
     const init = 1;
     const [use, set] = create(init);
 
@@ -27,13 +30,12 @@ describe("devtools", () => {
       }, ctx);
     };
 
-    expect(getDevtools()).toHaveLength(0);
-
     const setStore = compose(set, addOne, devtools(init));
 
     compose(set, addOne, devtools(init));
 
-    const d = Array.from(getDevtools<number>())[0];
+    const d = await getDevtools<number>();
+    onTestFinished(() => d.close());
 
     expect(d.state).toBe(1);
 
@@ -83,7 +85,7 @@ describe("devtools", () => {
     const setStore = compose(set, immerWithPatch(), devtools(init));
 
     const records: StoreRecord<number>[] = [];
-    const d = Array.from(getDevtools<number>())[0];
+    const d = await getDevtools<number>();
 
     d.subscribe((record) => {
       records.push(record);
@@ -114,7 +116,7 @@ describe("devtools", () => {
     const setStore = compose(set, immerWithPatch(), devtools(init));
 
     const records: StoreRecord<number>[] = [];
-    const d = Array.from(getDevtools<number>())[0];
+    const d = await getDevtools<number>();
 
     d.subscribe((record) => {
       records.push(record);
@@ -141,4 +143,45 @@ describe("devtools", () => {
   it("encode", async () => {
     expect(encode({ a: 1 })).toEqual('{\n  "a": 1\n}');
   });
+
+  it("can't get devtools", async () => {
+    let count = 0;
+    const close = onDevtools(() => {
+      count++;
+    });
+
+    Array.from({ length: 11 }).forEach(() => {
+      vi.advanceTimersToNextTimer();
+    });
+
+    expect(count).toBe(0);
+
+    close();
+  });
+
+  it("has devtools", async () => {
+    let count = 0;
+    const close = onDevtools(() => {
+      count++;
+    });
+
+    expect(count).toBe(0);
+
+    devtools(1)(() => 0);
+
+    vi.advanceTimersToNextTimer();
+    vi.advanceTimersToNextTimer();
+
+    expect(count).toBe(1);
+
+    close();
+  });
 });
+
+function getDevtools<S>() {
+  return new Promise<Devtools<S>>((resolve) => {
+    onDevtools<S>((d) => {
+      resolve(d);
+    });
+  });
+}

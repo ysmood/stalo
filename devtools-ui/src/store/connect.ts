@@ -1,17 +1,12 @@
-import { Devtools, getDevtools, encode } from "stalo/lib/devtools";
+import { onDevtools, encode } from "stalo/lib/devtools";
 import { plug, unplug } from ".";
 import { Connection } from "./constants";
 import { initName } from "../constants";
 
-export default async function connect(stop: AbortSignal) {
-  const connected = new Set<Devtools<unknown>>();
-
-  while (!stop.aborted) {
-    getDevtools<unknown>().forEach((d) => {
-      if (connected.has(d)) return;
-
-      connected.add(d);
-
+export default function connect(stop: AbortSignal) {
+  stop.addEventListener(
+    "abort",
+    onDevtools((d) => {
       const conn: Connection = {
         id: d.id,
         name: d.name,
@@ -39,11 +34,6 @@ export default async function connect(stop: AbortSignal) {
         close();
         unplug(conn.id);
       });
-    });
-
-    await new Promise((r) => {
-      const timer = setTimeout(r, 1000);
-      stop.addEventListener("abort", () => clearTimeout(timer));
-    });
-  }
+    })
+  );
 }

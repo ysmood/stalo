@@ -3,6 +3,9 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    include: ["@vitest/coverage-istanbul"]
+  },
   test: {
     include: ["./src/*.test.ts", "./src/*.test.tsx"],
     browser: {
@@ -13,7 +16,7 @@ export default defineConfig({
     },
     coverage: {
       provider: "istanbul",
-      include: ["./src/*.ts", "./src/*.tsx"],
+      include: ["src/*.ts", "src/*.tsx"],
     },
     setupFiles: ["./src/vitest.setup.ts"],
   },
