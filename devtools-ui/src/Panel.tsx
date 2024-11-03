@@ -35,7 +35,7 @@ const style = css({
   label: "Panel",
 
   display: "grid",
-  gridTemplateColumns: "320px 1fr",
+  gridTemplateColumns: "320px minmax(400px, 1fr)",
   gridTemplateRows: "auto 1fr",
   gridTemplateAreas: `
     "history record-details"
@@ -44,6 +44,7 @@ const style = css({
 
   gap: 10,
   height: "100%",
+  overflow: "scroll",
   color: "#fff",
   fontFamily: "Roboto, sans-serif",
   fontSize: 12,

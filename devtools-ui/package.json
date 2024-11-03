@@ -7,6 +7,7 @@
     "start": "vite --open",
     "build": "tsc -b --clean && tsc -b",
     "lint": "eslint",
+    "test": "",
     "prepublishOnly": "npm run build"
   },
   "publishConfig": {

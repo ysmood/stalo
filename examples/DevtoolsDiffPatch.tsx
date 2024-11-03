@@ -1,7 +1,14 @@
 import create from "stalo";
 import { compose } from "stalo/lib/utils";
-import devtools, { meta, immerWithPatch } from "stalo/lib/devtools";
+import devtools, { meta, immerWithPatch, onDevtools } from "stalo/lib/devtools";
 import { Panel } from "@stalo/devtools-ui";
+
+// Log all patches to the console
+onDevtools((dt) =>
+  dt.subscribe(({ patch }) => {
+    console.info("patch", JSON.stringify(patch));
+  })
+);
 
 const initStore = { title: "Counter", count: 0 };
 

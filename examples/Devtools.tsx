@@ -2,15 +2,12 @@ import create from "stalo";
 import { compose } from "stalo/lib/utils";
 import devtools, { meta } from "stalo/lib/devtools";
 import { Panel } from "@stalo/devtools-ui";
+import { Dock } from "react-dock";
 
-// Only serializable store values can be displayed in the devtools.
-// Only deserializable store values can be modified by the devtools.
 const initStore = 0;
 
 const [useCount, _set] = create(initStore);
 
-// Install the devtools middleware as the last middleware.
-// You can leave it out in production, no overhead.
 const setCount = compose(_set, devtools(initStore, "Demo"));
 
 function increase(n: number) {
@@ -29,7 +26,9 @@ export default function Devtools() {
       <h3>
         ↑ Click the buttons above to create new state records in the devtools ↑
       </h3>
-      <Panel width={800} height={400} />
+      <Dock position="bottom" isVisible={true} dimMode="none" defaultSize={0.5}>
+        <Panel />
+      </Dock>
     </div>
   );
 }

@@ -139,6 +139,10 @@ const style = css({
   alignItems: "center",
   cursor: "pointer",
 
+  "&:focus .thumb": {
+    border: "1px solid #aedeff",
+  },
+
   ".bg": {
     margin: "0 -8px",
     height: "40%",
@@ -157,8 +161,8 @@ const style = css({
     position: "absolute",
     transform: "translateX(-50%)",
     background: "#1784d0",
-    width: width,
-    height: "100%",
+    width: width - 2,
+    height: width - 2,
     borderRadius: "50%",
     boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.7)",
   },
