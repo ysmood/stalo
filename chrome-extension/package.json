@@ -3,7 +3,7 @@
   "version": "0.7.7",
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && zip -r stalo.zip dist",
     "lint": "eslint",
     "test": ""
   },
