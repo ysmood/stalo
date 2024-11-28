@@ -1,15 +1,17 @@
 import ReactDOM from "react-dom/client";
 import { onMessage, sendMessage } from "webext-bridge/devtools";
 import {
+  eventClose,
   eventConnect,
   eventInit,
   eventRecord,
   eventSet,
   Init,
   Record as Rec,
+  SessionIDs,
   Set,
 } from "./constants";
-import { unplug, Connection, Panel, plug } from "@stalo/devtools-ui";
+import { Connection, Panel, plug, unplug } from "@stalo/devtools-ui";
 
 main();
 
@@ -26,14 +28,10 @@ function main() {
 function connect() {
   const list: Record<string, Connection> = {};
 
+  sendMessage(eventInit, null, "window");
+
   // Just acknowledge connection don't need to do anything
   onMessage(eventConnect, () => {});
-
-  chrome.runtime.onConnect.addListener((port) => {
-    port.onDisconnect.addListener(() => {
-      Object.keys(list).forEach((id) => unplug(id));
-    });
-  });
 
   onMessage<Init>(eventInit, ({ data }) => {
     const conn: Connection = {
@@ -49,10 +47,14 @@ function connect() {
 
     conn.onInit?.(data.record);
 
-    list[conn.id] = conn;
+    if (!list[conn.id]) list[conn.id] = conn;
   });
 
   onMessage<Rec>(eventRecord, ({ data }) => {
     list[data.id]?.onRecord?.(data.record);
+  });
+
+  onMessage<SessionIDs>(eventClose, ({ data }) => {
+    data.forEach((id) => unplug(id));
   });
 }
