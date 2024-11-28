@@ -13,9 +13,7 @@ allowWindowMessaging(namespace);
     return; // devtools panel is not open
   }
 
-  window.addEventListener("load", () => {
-    const script = document.createElement("script");
-    script.src = chrome.runtime.getURL("communicator.js");
-    document.head.appendChild(script);
-  });
+  const script = document.createElement("script");
+  script.src = chrome.runtime.getURL("communicator.js");
+  document.head.appendChild(script);
 })();
