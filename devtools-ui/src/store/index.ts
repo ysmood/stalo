@@ -9,6 +9,7 @@ import {
 } from "./constants";
 import { bufferedCall } from "./utils";
 import { addRecord, newRecords } from "./records";
+import { getSize } from "./list";
 
 setAutoFreeze(false);
 enablePatches();
@@ -31,6 +32,7 @@ export function plug(c: Connection) {
         id,
         name: c.name,
         selected: 0,
+        current: 0,
         staging: rec.state,
         records: newRecords(rec),
       };
@@ -42,6 +44,7 @@ export function plug(c: Connection) {
       list.forEach((rec) => {
         addRecord(store.sessions[id].records, rec);
       });
+      store.sessions[id].current = getSize(store.sessions[id].records.list) - 1;
     });
   });
 }

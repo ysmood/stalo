@@ -4,11 +4,11 @@ import { StoreRecord, encode } from "stalo/lib/devtools";
 import { applyPatches } from "immer";
 
 export type StoreRecordX = {
-  parsedCache?: unknown;
-  stringCache?: string;
+  parsedCache?: unknown; // parsed state
+  stringCache?: string; // json string representation of the state
 
-  rec: StoreRecord<string | undefined>;
-  last?: StoreRecordX;
+  rec: StoreRecord<string | undefined>; // the state record
+  last?: StoreRecordX; // the previous state record for diff calculation
 };
 
 export function newStoreRecordX(

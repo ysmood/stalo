@@ -27,12 +27,12 @@ const emptyRecord = newStoreRecordX({
 });
 
 type Records = {
-  list: List<StoreRecordX>;
-  filter: string;
-  filtered: List<number>;
+  list: List<StoreRecordX>; // The list of records.
+  filter: string; // The filter string in the in the search box.
+  filtered: List<number>; // The list of indexes of the records that match the filter.
 
-  _fuse: Fuse<StoreRecordX["rec"]>;
-  _fuseSingle: Fuse<StoreRecordX["rec"]>;
+  _fuse: Fuse<StoreRecordX["rec"]>; // Used to search all records.
+  _fuseSingle: Fuse<StoreRecordX["rec"]>; // Used to search a single record.
 };
 
 export function newRecords(...records: StoreRecord<string>[]): Records {

@@ -28,19 +28,29 @@ export function commit() {
   setSession((s) => {
     const state = s.staging;
 
-    s.selected = List.getSize(s.records.list);
+    if (s.selected !== List.getSize(s.records.list) - 1) {
+      s.selected = List.getSize(s.records.list);
+
+      addRecord(s.records, {
+        state,
+        name: commitName,
+        description: "Committed by devtools",
+        createdAt: Date.now(),
+      });
+    }
+
+    s.current = s.selected;
 
     setScrollTo(s, s.selected);
 
-    addRecord(s.records, {
-      state,
-      name: commitName,
-      description: "Committed by devtools",
-      createdAt: Date.now(),
-    });
-
     setState(s, state);
   });
+}
+
+export function useSameAsCurrent() {
+  return useSession(
+    (s) => s.staging === getState(List.getItem(s.records.list, s.current))
+  );
 }
 
 export function useSameLast() {

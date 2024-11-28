@@ -39,6 +39,7 @@ export function travelTo(i: number) {
     setScrollTo(s, i);
     const state = getState(getRecord(s.records, i));
     s.staging = state;
+    s.current = i;
     setState(s, state);
   });
 }

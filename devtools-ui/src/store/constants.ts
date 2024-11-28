@@ -21,12 +21,14 @@ export const emptySession = {
   id: "", // connection id
   name: "none", // connection name
 
-  staging: "",
+  current: -1, // the record index that reflects the current page state
+  staging: "", // the current string in the editor
   diffMode: false,
 
-  selected: -1,
+  selected: -1, // the record index that is selected in the record list
   records: newRecords(),
 
+  // Don't use number type for scrollTo because we want react-window to scroll even if the value is the same.
   scrollTo: { val: 0 },
 };
 

@@ -3,9 +3,10 @@ import {
   format,
   toggleDiffMode,
   useDiffMode,
+  useSameAsCurrent,
   useSameLast,
 } from "./store/staging";
-import { selectRecord, travelTo } from "./store/history";
+import { scrollToBottom, selectRecord, travelTo } from "./store/history";
 import { css } from "@emotion/css";
 import { Button, Title } from "./Components";
 import { Editor } from "./Editor";
@@ -54,16 +55,20 @@ function Toolbar() {
     <div className="toolbar">
       <Title text="Staging" />
       <Button
-        onClick={() => selectRecord(-1)}
+        onClick={() => {
+          selectRecord(-1);
+          scrollToBottom();
+        }}
         icon={<LuUndoDot size={16} />}
         title="Revert to the last state record"
+        disabled={useSameLast()}
       />
       <Button
         onClick={() => commit()}
         icon={<LuCheck size={16} color="#20cf20" />}
         text="Commit"
         title="Set page state as staging content"
-        disabled={useSameLast()}
+        disabled={useSameAsCurrent()}
       />
       <Button
         onClick={() => format()}
