@@ -11,8 +11,8 @@ import {
   newList,
 } from "./list";
 
-const fuseOptions: IFuseOptions<StoreRecordX> = {
-  keys: ["id", "name", "description"],
+const fuseOptions: IFuseOptions<StoreRecordX["rec"]> = {
+  keys: ["name", "description"],
   ignoreLocation: true,
   isCaseSensitive: true,
   threshold: 0,
@@ -31,8 +31,8 @@ type Records = {
   filter: string;
   filtered: List<number>;
 
-  _fuse: Fuse<StoreRecordX>;
-  _fuseSingle: Fuse<StoreRecordX>;
+  _fuse: Fuse<StoreRecordX["rec"]>;
+  _fuseSingle: Fuse<StoreRecordX["rec"]>;
 };
 
 export function newRecords(...records: StoreRecord<string>[]): Records {
@@ -41,8 +41,8 @@ export function newRecords(...records: StoreRecord<string>[]): Records {
     filter: "",
     filtered: newList<number>(),
 
-    _fuse: new Fuse<StoreRecordX>([], fuseOptions),
-    _fuseSingle: new Fuse<StoreRecordX>([], fuseOptions),
+    _fuse: new Fuse<StoreRecordX["rec"]>([], fuseOptions),
+    _fuseSingle: new Fuse<StoreRecordX["rec"]>([], fuseOptions),
   };
 
   records.forEach((rec) => {
@@ -59,7 +59,7 @@ export function addRecord(r: Records, rec: StoreRecord<string | undefined>) {
   r.list = addItem(r.list, recX);
 
   // Update the fuse index.
-  r._fuse.add(recX);
+  r._fuse.add(recX.rec);
 
   // If the record matches the filter, add it to the filtered list.
   if (r.filter === "") {

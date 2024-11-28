@@ -46,10 +46,10 @@ export function mapItems<T, U>(
   l: List<T>,
   cb: (value: T, index: number) => U
 ): List<U> {
-  const out = newList<U>();
+  let out = newList<U>();
 
   for (let i = 0; i < l._size; i++) {
-    addItem(out, cb(l._list[i], i));
+    out = addItem(out, cb(l._list[i], i));
   }
 
   return out;

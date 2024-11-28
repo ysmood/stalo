@@ -1,5 +1,6 @@
 import { setSession, useSession } from "./session";
 import { debounce } from "./utils";
+import { setFilter as recordsSetFilter } from "./records";
 
 export function useFilter() {
   return useSession((s) => s.records.filter);
@@ -11,6 +12,6 @@ export function useFiltered() {
 
 export const setFilter = debounce((filter: string) => {
   setSession((s) => {
-    s.records.filter = filter;
+    recordsSetFilter(s.records, filter);
   });
 }, 300);

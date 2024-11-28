@@ -1,12 +1,9 @@
 // Extended StoreRecord
 
 import { StoreRecord, encode } from "stalo/lib/devtools";
-import { uid } from "stalo/lib/utils";
 import { applyPatches } from "immer";
 
 export type StoreRecordX = {
-  _id: string;
-
   parsedCache?: unknown;
   stringCache?: string;
 
@@ -19,7 +16,6 @@ export function newStoreRecordX(
   last?: StoreRecordX
 ): StoreRecordX {
   return {
-    _id: uid(),
     rec,
     last,
   };
