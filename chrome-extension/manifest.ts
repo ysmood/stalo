@@ -48,7 +48,13 @@ function genManifest() {
 
   writeFileSync(
     `${dist}/${htmlFilename}`,
-    `<html><script src="${jsFilename}"></script></html>`
+    `<html>
+      <head>
+        <meta charset="utf-8"/>
+        <title>Stalo Devtools</title>
+      </head>
+      <script src="${jsFilename}"></script>
+    </html>`
   );
   console.info("Generated chrome extension html entrypoint");
 
