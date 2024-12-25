@@ -47,12 +47,6 @@ export function commit() {
   });
 }
 
-export function useSameAsCurrent() {
-  return useSession(
-    (s) => s.staging === getState(List.getItem(s.records.list, s.current))
-  );
-}
-
 export function useSameLast() {
   return useSession(
     (s) => s.staging === getState(List.getLast(s.records.list))

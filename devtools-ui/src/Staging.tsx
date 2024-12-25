@@ -3,7 +3,6 @@ import {
   format,
   toggleDiffMode,
   useDiffMode,
-  useSameAsCurrent,
   useSameLast,
 } from "./store/staging";
 import { scrollToBottom, selectRecord, travelTo } from "./store/history";
@@ -68,7 +67,6 @@ function Toolbar() {
         icon={<LuCheck size={16} color="#20cf20" />}
         text="Commit"
         title="Set page state as staging content"
-        disabled={useSameAsCurrent()}
       />
       <Button
         onClick={() => format()}
