@@ -135,6 +135,7 @@ it("if no change no publish", async () => {
       <>
         {useVal(() => {
           count++;
+          return null;
         })}
       </>
     );
