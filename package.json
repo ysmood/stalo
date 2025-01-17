@@ -3,10 +3,10 @@
   "version": "0.7.10",
   "type": "module",
   "scripts": {
-    "start": "npm run build && cd examples && vite --open",
+    "start": "npm run build && npm -w devtools-ui run build && cd examples && vite --open",
     "test": "vitest run --coverage",
     "build": "tsc -b --clean && tsc -b",
-    "lint": "eslint ./src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint --max-warnings 0",
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
     "version": "node src/sync-version.js"

@@ -8,6 +8,8 @@
     "rootDir": "./src",
     "outDir": "./lib",
     "declaration": true,
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.lib.tsbuildinfo",
 
     /* Bundler mode */
     "moduleResolution": "Bundler",
