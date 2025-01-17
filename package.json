@@ -45,16 +45,16 @@
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.7.0",
     "@typescript-eslint/parser": "^8.7.0",
-    "@vitejs/plugin-react": "^4.3.1",
-    "@vitest/browser": "^2.1.2",
-    "@vitest/coverage-istanbul": "^2.1.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/browser": "^3.0.1",
+    "@vitest/coverage-istanbul": "^3.0.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.12",
     "react-dom": "^18.3.1",
     "typescript": "^5.5.2",
-    "vite": "^5.4.8",
-    "vitest": "^2.1.2",
+    "vite": "^6.0.7",
+    "vitest": "^3.0.1",
     "playwright": "^1.47.2"
   }
 }

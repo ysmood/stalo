@@ -10,7 +10,11 @@ export default defineConfig({
     include: ["./src/*.test.ts", "./src/*.test.tsx"],
     browser: {
       enabled: true,
-      name: "chromium",
+      instances: [
+        {
+          browser: 'chromium'
+        }
+      ],
       provider: "playwright",
       headless: true,
     },
