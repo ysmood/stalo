@@ -35,7 +35,7 @@ export const emptySession = {
 export type Session = typeof emptySession;
 
 export const initStore = {
-  currSession: "",
+  currSessionId: "",
   sessions: {} as Record<string, Session>,
 };
 

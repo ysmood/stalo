@@ -25,7 +25,7 @@ export function plug(c: Connection) {
     rec.description = "Initial state when the session was started";
 
     setStore((store) => {
-      if (!store.currSession) store.currSession = id;
+      if (!store.currSessionId) store.currSessionId = id;
 
       store.sessions[id] = {
         ...emptySession,
@@ -51,7 +51,7 @@ export function plug(c: Connection) {
 
 export function unplug(id: string) {
   setStore((store) => {
-    if (store.currSession === id) store.currSession = "";
+    if (store.currSessionId === id) store.currSessionId = "";
     delete store.sessions[id];
   });
 }

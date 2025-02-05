@@ -1,17 +1,17 @@
-import { setSession, useSession } from "./session";
+import { setCurrSession, useCurrSession } from "./session";
 import { debounce } from "./utils";
 import { setFilter as recordsSetFilter } from "./records";
 
 export function useFilter() {
-  return useSession((s) => s.records.filter);
+  return useCurrSession((s) => s.records.filter);
 }
 
 export function useFiltered() {
-  return useSession((s) => s.records.filtered);
+  return useCurrSession((s) => s.records.filtered);
 }
 
 export const setFilter = debounce((filter: string) => {
-  setSession((s) => {
+  setCurrSession((s) => {
     recordsSetFilter(s.records, filter);
   });
 }, 300);

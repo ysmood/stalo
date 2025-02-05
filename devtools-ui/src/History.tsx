@@ -1,12 +1,12 @@
 import { css, cx } from "@emotion/css";
-import { useCurrSession, useSessions, selectSession } from "./store/session";
+import { useCurrSessionId, selectSession, useSessions } from "./store/session";
 import {
   scrollToBottom,
   scrollToTop,
   selectRecord,
+  useIsSelected,
   useRecord,
   useScrollTo,
-  useSelected,
   useTimeDiff,
 } from "./store/history";
 import { setFilter, useFiltered } from "./store/filter";
@@ -43,7 +43,7 @@ function Header() {
       <Title className="title" text="History" />
       <Sessions />
       <div className="session-id">
-        <LuDatabase /> <code>{useCurrSession()}</code>
+        <LuDatabase /> <code>{useCurrSessionId()}</code>
       </div>
     </>
   );
@@ -89,14 +89,13 @@ function Filter() {
 }
 
 function Sessions() {
-  const ss = useSessions();
-  const list = Object.keys(ss).map((id) => ss[id]);
+  const list = useSessions();
 
   return (
     <div className="sessions">
       <select
         onChange={(e) => selectSession(e.target.value)}
-        value={useCurrSession()}
+        value={useCurrSessionId()}
         title="Select a devtools session"
       >
         {list.map(({ id, name }) => (
@@ -112,37 +111,46 @@ function Sessions() {
 function ItemList() {
   const filtered = useFiltered();
   const ref = useRef<FixedSizeList>(null);
-  const scrollTo = useScrollTo();
 
   const scroll = useThrottle(
-    (to: typeof scrollTo) => {
-      ref.current?.scrollToItem(to.val, "smart");
+    (to: number) => {
+      ref.current?.scrollToItem(to, "smart");
     },
     100,
     []
   );
 
+  return (
+    <>
+      <Scroll scroll={scroll} />
+      <AutoSizer>
+        {({ height, width }) => (
+          <FixedSizeList
+            ref={ref}
+            width={width}
+            height={height}
+            itemCount={List.getSize(filtered)}
+            itemSize={recordHeight}
+          >
+            {({ index: i, style }) => {
+              return <Item index={List.getItem(filtered, i)!} style={style} />;
+            }}
+          </FixedSizeList>
+        )}
+      </AutoSizer>
+    </>
+  );
+}
+
+// This is a virtual component that incapsulates the scroll logic to reduce the re-rendering of the parent component.
+function Scroll({ scroll }: { scroll: (to: number) => void }) {
+  const scrollTo = useScrollTo();
+
   useEffect(() => {
-    scroll(scrollTo);
+    scroll(scrollTo.val);
   }, [scroll, scrollTo]);
 
-  return (
-    <AutoSizer>
-      {({ height, width }) => (
-        <FixedSizeList
-          ref={ref}
-          width={width}
-          height={height}
-          itemCount={List.getSize(filtered)}
-          itemSize={recordHeight}
-        >
-          {({ index: i, style }) => {
-            return <Item index={List.getItem(filtered, i)!} style={style} />;
-          }}
-        </FixedSizeList>
-      )}
-    </AutoSizer>
-  );
+  return null;
 }
 
 function Item({ index, style }: { index: number; style: React.CSSProperties }) {
@@ -150,15 +158,13 @@ function Item({ index, style }: { index: number; style: React.CSSProperties }) {
 
   return (
     <div
-      className={cx("item", {
-        selected: useSelected() === index,
-      })}
+      className={cx("item", { selected: useIsSelected(index) })}
       onClick={() => selectRecord(index)}
       style={style}
     >
       <div className="line title">
         <Name className="name" name={rec.name} />
-        <TimeDiff duration={useTimeDiff(index)} />
+        <TimeDiffComp index={index} />
         <code className="index">{index.toString().padStart(4, " ")}</code>
       </div>
       <div className="line light">
@@ -170,6 +176,10 @@ function Item({ index, style }: { index: number; style: React.CSSProperties }) {
       </div>
     </div>
   );
+}
+
+function TimeDiffComp({ index }: { index: number }) {
+  return <TimeDiff duration={useTimeDiff(index)} />;
 }
 
 const style = css({
