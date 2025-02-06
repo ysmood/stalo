@@ -9,20 +9,21 @@ import {
 } from "react";
 
 const width = 16;
+const stepSize = 4;
 const animationDuration = 200;
 
 export default function Slider({
   min,
   max,
-  step,
   value,
+  step = 1,
   title,
   onChange,
 }: {
   min: number;
   max: number;
-  step: number;
   value: number;
+  step?: number;
   title?: string;
   onChange: (value: number) => void;
 }) {
@@ -118,6 +119,10 @@ export default function Slider({
           }}
         ></div>
       </div>
+      <Steps
+        steps={max - min}
+        sliderWidth={sliderRef.current?.clientWidth || 0}
+      />
       <div
         className={"thumb"}
         style={{
@@ -128,6 +133,16 @@ export default function Slider({
       ></div>
     </div>
   );
+}
+
+function Steps({ steps, sliderWidth }: { steps: number; sliderWidth: number }) {
+  if (sliderWidth / steps < 3 * stepSize) {
+    return null;
+  }
+
+  return Array.from({ length: steps + 1 }).map((_, i) => (
+    <div key={i} className="step" style={{ left: `${(i / steps) * 100}%` }} />
+  ));
 }
 
 const style = css({
@@ -165,6 +180,16 @@ const style = css({
     height: width - 2,
     borderRadius: "50%",
     boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.7)",
+  },
+
+  ".step": {
+    position: "absolute",
+    y: 0,
+    width: stepSize,
+    height: stepSize,
+    borderRadius: stepSize,
+    transform: "translateX(-50%)",
+    background: "#ffffff66",
   },
 
   "&.dragging .thumb, .thumb:hover": {

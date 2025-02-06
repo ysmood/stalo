@@ -102,7 +102,6 @@ function Travel() {
     >
       <TbClockCode size={20} />
       <Slider
-        step={1}
         min={0}
         max={List.getSize(filtered) - 1}
         value={value}
