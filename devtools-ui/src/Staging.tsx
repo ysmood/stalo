@@ -5,7 +5,12 @@ import {
   useDiffMode,
   useSameLast,
 } from "./store/staging";
-import { scrollToBottom, selectRecord, travelTo } from "./store/history";
+import {
+  scrollToBottom,
+  selectRecord,
+  travelTo,
+  useSelected,
+} from "./store/history";
 import { css } from "@emotion/css";
 import { Button, Title } from "./Components";
 import { Editor } from "./Editor";
@@ -18,7 +23,6 @@ import { TbClockCode } from "react-icons/tb";
 import { DiffEditor } from "./DiffEditor";
 import { VscDiffMultiple } from "react-icons/vsc";
 import * as List from "./store/list";
-import React from "react";
 
 export default function Staging() {
   return (
@@ -89,7 +93,7 @@ function Toolbar() {
 
 function Travel() {
   const filtered = useFiltered();
-  const [value, setValue] = React.useState(0);
+  const value = useSelected();
 
   return (
     <div
@@ -103,7 +107,6 @@ function Travel() {
         max={List.getSize(filtered) - 1}
         value={value}
         onChange={async (val) => {
-          setValue(val);
           travelTo(List.getItem(filtered, val)!);
         }}
       />
