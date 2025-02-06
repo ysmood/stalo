@@ -1,6 +1,6 @@
 {
   "name": "stalo",
-  "version": "0.7.11",
+  "version": "0.7.12",
   "type": "module",
   "scripts": {
     "start": "npm run build && npm -w devtools-ui run build && cd examples && vite --open",
