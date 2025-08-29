@@ -43,8 +43,9 @@ export function localStorage<S>(storage: LocalStorage<S>): Middleware<S> {
   return function (set) {
     return (ns, ctx) => {
       set((state) => {
-        storage.set(state);
-        return produce(state, ns);
+        const s = produce(state, ns);
+        storage.set(s);
+        return s;
       }, ctx);
     };
   };

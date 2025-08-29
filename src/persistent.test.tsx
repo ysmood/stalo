@@ -32,6 +32,10 @@ describe("URLStorage", () => {
 
     setVal(() => "02");
 
+    expect(location.hash).toEqual(
+      `#${defaultKey}=${encodeURIComponent('"02"')}`
+    );
+
     render(<A />);
 
     expect(screen.getByText("02")).not.toBeNull();
@@ -115,6 +119,8 @@ describe("localStorage", () => {
     cleanup();
 
     setVal(() => "02");
+
+    expect(localStorage.getItem("global-state")).toEqual(JSON.stringify("02"));
 
     render(<A />);
 
